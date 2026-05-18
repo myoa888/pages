@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>曲谱收藏夹 - 音乐爱好者的曲谱管理神器</title>
+    <meta name="description" content="曲谱收藏夹是一款完全免费的个人曲谱管理工具，专为音乐爱好者设计。支持上传整理曲谱、自动滚动播放、内置节拍器，让练琴更高效。">
+    <meta name="keywords" content="曲谱,曲谱管理,练琴,节拍器,钢琴谱,吉他谱,五线谱">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 顶部导航 -->
+    <header class="header">
+        <div class="container header-inner">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">🎵</span>
+                <span class="logo-text">曲谱收藏夹</span>
+            </a>
+            <nav class="nav">
+                <a href="#features">功能特点</a>
+                <a href="#preview">界面预览</a>
+                <a href="#download">下载</a>
+                <a href="#guide">使用教程</a>
+                <a href="#about">关于</a>
+            </nav>
+            <a href="#download" class="btn-download-header">立即下载</a>
+        </div>
+    </header>
+
+    <!-- 英雄区域 -->
+    <section class="hero">
+        <div class="hero-bg">
+            <div class="hero-particles">
+                <span></span><span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="container hero-content">
+            <div class="hero-text">
+                <div class="hero-badge">
+                    <span class="badge-icon">✨</span>
+                    <span>永久免费 · 无广告 · 数据本地存储</span>
+                </div>
+                <h1>曲谱收藏夹</h1>
+                <p class="hero-subtitle">专为音乐爱好者打造的曲谱管理神器</p>
+                <p class="hero-desc">
+                    轻松上传、整理你的曲谱，支持自动滚动播放和节拍器功能，<br>
+                    让练琴更加高效便捷。你的曲谱，你做主。
+                </p>
+                <div class="hero-buttons">
+                    <a href="#download" class="btn btn-primary">
+                        <span>📥</span> 立即下载 APK
+                    </a>
+                    <a href="https://didaima.gitee.io/music-score-bookmark/" target="_blank" class="btn btn-secondary">
+                        <span>🌐</span> 在线体验 Web版
+                    </a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">10万+</span>
+                        <span class="stat-label">下载量</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">4.8</span>
+                        <span class="stat-label">用户评分</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">0</span>
+                        <span class="stat-label">广告干扰</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="phone-mockup">
+                    <div class="phone-frame">
+                        <div class="phone-screen">
+                            <div class="app-header">
+                                <span>🎵</span>
+                                <span>曲谱收藏夹</span>
+                            </div>
+                            <div class="app-content">
+                                <div class="app-card active">
+                                    <div class="card-icon">🎹</div>
+                                    <div class="card-info">
+                                        <div class="card-title">梦中的婚礼</div>
+                                        <div class="card-meta">理查德·克莱德曼 · 钢琴</div>
+                                    </div>
+                                </div>
+                                <div class="app-card">
+                                    <div class="card-icon">🎸</div>
+                                    <div class="card-info">
+                                        <div class="card-title">天空之城</div>
+                                        <div class="card-meta">久石让 · 吉他</div>
+                                    </div>
+                                </div>
+                                <div class="app-card">
+                                    <div class="card-icon">🎤</div>
+                                    <div class="card-info">
+                                        <div class="card-title">晴天</div>
+                                        <div class="card-meta">周杰伦 · 弹唱</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="app-metronome">
+                                <div class="metronome-display">♩=120</div>
+                                <div class="metronome-bars">
+                                    <span class="bar active"></span>
+                                    <span class="bar active"></span>
+                                    <span class="bar active"></span>
+                                    <span class="bar"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 功能特点 -->
+    <section class="section features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">核心功能</span>
+                <h2 class="section-title">专为琴友设计的功能</h2>
+                <p class="section-desc">每一个功能都经过精心打磨，让你的练琴体验更加流畅</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📤</div>
+                    <h3>曲谱管理</h3>
+                    <p>上传、查看、编辑曲谱图片，支持批量导入，让你的曲谱库不断壮大</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📁</div>
+                    <h3>分类整理</h3>
+                    <p>支持按歌手、标签、调式等多种方式分类，快速找到想要的曲谱</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">▶️</div>
+                    <h3>自动播放</h3>
+                    <p>曲谱详情页支持自动滚动播放，边看边弹，专注练琴不间断</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⏱️</div>
+                    <h3>节拍器</h3>
+                    <p>内置节拍器，支持自定义 BPM 和拍号，帮你建立稳定的节奏感</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💾</div>
+                    <h3>数据备份</h3>
+                    <p>支持 JSON 格式导入导出，换设备也不怕，数据永不丢失</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>练琴统计</h3>
+                    <p>首页展示今日练琴时长和坚持天数，见证每一次进步</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 界面预览 -->
+    <section class="section preview" id="preview">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">界面预览</span>
+                <h2 class="section-title">简洁美观的界面设计</h2>
+                <p class="section-desc">现代化的设计语言，让操作更加直观流畅</p>
+            </div>
+            <div class="preview-showcase">
+                <div class="preview-phone">
+                    <div class="preview-frame">
+                        <div class="preview-screen">
+                            <div class="preview-content list-view">
+                                <div class="preview-nav">
+                                    <span class="active">全部</span>
+                                    <span>钢琴</span>
+                                    <span>吉他</span>
+                                    <span>其他</span>
+                                </div>
+                                <div class="preview-items">
+                                    <div class="preview-item">
+                                        <div class="item-icon">🎹</div>
+                                        <div class="item-info">
+                                            <div class="item-title">卡农</div>
+                                            <div class="item-sub">帕赫贝尔 · 钢琴曲</div>
+                                        </div>
+                                        <div class="item-badge">热门</div>
+                                    </div>
+                                    <div class="preview-item">
+                                        <div class="item-icon">🎸</div>
+                                        <div class="item-info">
+                                            <div class="item-title">时光正好</div>
+                                            <div class="item-sub">郁可唯 · 吉他弹唱</div>
+                                        </div>
+                                    </div>
+                                    <div class="preview-item">
+                                        <div class="item-icon">🎤</div>
+                                        <div class="item-info">
+                                            <div class="item-title">稻香</div>
+                                            <div class="item-sub">周杰伦 · 弹唱</div>
+                                        </div>
+                                        <div class="item-badge new">新</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="preview-label">曲谱列表</p>
+                </div>
+                <div class="preview-phone">
+                    <div class="preview-frame">
+                        <div class="preview-screen">
+                            <div class="preview-content detail-view">
+                                <div class="preview-detail">
+                                    <div class="detail-score">
+                                        <div class="score-line"></div>
+                                        <div class="score-line"></div>
+                                        <div class="score-line"></div>
+                                        <div class="score-line"></div>
+                                        <div class="score-line highlight"></div>
+                                    </div>
+                                </div>
+                                <div class="preview-controls">
+                                    <div class="control-row">
+                                        <span class="speed-label">速度</span>
+                                        <div class="speed-dots">
+                                            <span class="dot"></span>
+                                            <span class="dot active"></span>
+                                            <span class="dot"></span>
+                                            <span class="dot"></span>
+                                            <span class="dot"></span>
+                                        </div>
+                                    </div>
+                                    <div class="control-row">
+                                        <div class="play-btn">▶️</div>
+                                        <div class="metronome-btn">⏱️ 120</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="preview-label">曲谱详情 · 自动播放</p>
+                </div>
+                <div class="preview-phone">
+                    <div class="preview-frame">
+                        <div class="preview-screen">
+                            <div class="preview-content metronome-view">
+                                <div class="metronome-display-large">
+                                    <div class="tempo">120</div>
+                                    <div class="tempo-label">BPM</div>
+                                </div>
+                                <div class="metronome-visual">
+                                    <div class="pendulum"></div>
+                                </div>
+                                <div class="time-sig">
+                                    <span class="sig active">4/4</span>
+                                    <span class="sig">3/4</span>
+                                    <span class="sig">6/8</span>
+                                </div>
+                                <div class="beat-dots">
+                                    <span class="beat active"></span>
+                                    <span class="beat"></span>
+                                    <span class="beat"></span>
+                                    <span class="beat"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="preview-label">节拍器</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 下载区域 -->
+    <section class="section download" id="download">
+        <div class="container">
+            <div class="section-header light">
+                <span class="section-tag">开始使用</span>
+                <h2 class="section-title">免费下载</h2>
+                <p class="section-desc">多种使用方式，随时随地管理你的曲谱</p>
+            </div>
+            <div class="download-cards">
+                <div class="download-card">
+                    <div class="download-icon">📱</div>
+                    <h3>Android APP</h3>
+                    <p>安装到手机，随时随地练琴</p>
+                    <div class="download-info">
+                        <span>Android 5.0+</span>
+                        <span>约 5MB</span>
+                    </div>
+                    <a href="https://gitee.com/didaima/music-score-bookmark/releases" target="_blank" class="btn-download">
+                        <span>⬇️</span> 下载 APK
+                    </a>
+                </div>
+                <div class="download-card featured">
+                    <div class="featured-badge">推荐</div>
+                    <div class="download-icon">🌐</div>
+                    <h3>Web 在线版</h3>
+                    <p>无需安装，打开浏览器即可使用</p>
+                    <div class="download-info">
+                        <span>Chrome 80+</span>
+                        <span>Safari 14+</span>
+                    </div>
+                    <a href="https://didaima.gitee.io/music-score-bookmark/" target="_blank" class="btn-download">
+                        <span>🚀</span> 立即体验
+                    </a>
+                </div>
+                <div class="download-card">
+                    <div class="download-icon">🐙</div>
+                    <h3>开源项目</h3>
+                    <p>查看源码，欢迎 Star 和 Fork</p>
+                    <div class="download-info">
+                        <span>MIT 许可证</span>
+                        <span>纯原生 JS</span>
+                    </div>
+                    <a href="https://gitee.com/didaima/music-score-bookmark" target="_blank" class="btn-download">
+                        <span>⭐</span> 访问仓库
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 使用教程 -->
+    <section class="section guide" id="guide">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">快速上手</span>
+                <h2 class="section-title">简单几步，开始使用</h2>
+                <p class="section-desc">上手即用，无需复杂设置</p>
+            </div>
+            <div class="guide-steps">
+                <div class="guide-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>下载安装</h3>
+                        <p>下载 APK 文件并安装到你的 Android 手机，或直接使用 Web 版本</p>
+                        <div class="step-icons">
+                            <span>📱</span>
+                            <span>🌐</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="guide-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>上传曲谱</h3>
+                        <p>点击底部「上传」按钮，填写标题、歌手、标签等信息，上传曲谱图片</p>
+                        <div class="step-icons">
+                            <span>📤</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="guide-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>开始练琴</h3>
+                        <p>点击曲谱进入详情页，调节滚动速度，开启节拍器，边播放边练琴</p>
+                        <div class="step-icons">
+                            <span>▶️</span>
+                            <span>⏱️</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="guide-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3>数据备份</h3>
+                        <p>定期导出备份，换设备时导入恢复，曲谱永不丢失</p>
+                        <div class="step-icons">
+                            <span>💾</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 隐私安全 -->
+    <section class="section privacy" id="privacy">
+        <div class="container">
+            <div class="privacy-content">
+                <div class="privacy-icon">🔒</div>
+                <h2>你的数据，只有你能看到</h2>
+                <p>曲谱收藏夹采用纯本地存储架构，<strong>所有数据均存储在你设备本地</strong>，不会上传至任何服务器。</p>
+                <div class="privacy-features">
+                    <div class="privacy-item">
+                        <span class="check">✓</span>
+                        <span>数据本地存储</span>
+                    </div>
+                    <div class="privacy-item">
+                        <span class="check">✓</span>
+                        <span>无需注册登录</span>
+                    </div>
+                    <div class="privacy-item">
+                        <span class="check">✓</span>
+                        <span>无任何追踪</span>
+                    </div>
+                    <div class="privacy-item">
+                        <span class="check">✓</span>
+                        <span>永久免费无广告</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 关于 -->
+    <section class="section about" id="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-tech">
+                    <h3>技术栈</h3>
+                    <div class="tech-tags">
+                        <span class="tech-tag">纯原生 JavaScript</span>
+                        <span class="tech-tag">IndexedDB</span>
+                        <span class="tech-tag">localStorage</span>
+                        <span class="tech-tag">响应式设计</span>
+                        <span class="tech-tag">MIT 开源</span>
+                    </div>
+                </div>
+                <div class="about-links">
+                    <h3>相关链接</h3>
+                    <div class="links-list">
+                        <a href="https://gitee.com/didaima/music-score-bookmark" target="_blank">
+                            <span>📦</span> 项目仓库
+                        </a>
+                        <a href="https://gitee.com/didaima/music-score-bookmark/releases" target="_blank">
+                            <span>⬇️</span> 下载页面
+                        </a>
+                        <a href="https://didaima.gitee.io/music-score-bookmark/" target="_blank">
+                            <span>🌐</span> 在线体验
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 底部 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <span class="logo-icon">🎵</span>
+                    <span class="logo-text">曲谱收藏夹</span>
+                    <p>专为音乐爱好者设计的曲谱管理工具</p>
+                </div>
+                <div class="footer-links">
+                    <div class="link-group">
+                        <h4>下载</h4>
+                        <a href="https://gitee.com/didaima/music-score-bookmark/releases" target="_blank">Android APK</a>
+                        <a href="https://didaima.gitee.io/music-score-bookmark/" target="_blank">Web 在线版</a>
+                        <a href="https://gitee.com/didaima/music-score-bookmark" target="_blank">源码下载</a>
+                    </div>
+                    <div class="link-group">
+                        <h4>资源</h4>
+                        <a href="#features">功能介绍</a>
+                        <a href="#preview">界面预览</a>
+                        <a href="#guide">使用教程</a>
+                    </div>
+                    <div class="link-group">
+                        <h4>关于</h4>
+                        <a href="#privacy">隐私政策</a>
+                        <a href="https://gitee.com/didaima/music-score-bookmark" target="_blank">项目仓库</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 曲谱收藏夹 · MIT 开源协议</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
