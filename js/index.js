@@ -12,6 +12,14 @@ const softwareData = {
         },
         {
             id: 2,
+            name: '智慧党建管理系统',
+            icon: '🏛️',
+            desc: '一站式数字化党建管理平台，14大功能模块',
+            url: 'software/dangjian/index.html',
+            category: '办公协作'
+        },
+        {
+            id: 3,
             name: 'Chrome浏览器',
             icon: '🌐',
             desc: '快速、安全的网页浏览器',
@@ -80,18 +88,12 @@ const softwareData = {
     ],
     // 最新更新
     latest: [
+        { name: '智慧党建管理系统 v1.0', version: '2026-06-01' },
         { name: '曲谱收藏夹 v1.0', version: '2026-05-18' },
         { name: 'Chrome 125.0', version: '2026-05-18' },
         { name: '微信 3.9.5', version: '2026-05-17' },
         { name: 'WPS Office 2026', version: '2026-05-16' },
         { name: 'VS Code 1.90', version: '2026-05-15' }
-    ],
-    // 党建文章
-    djArticles: [
-        { id: 1, tag: '理论学习', title: '深入学习贯彻习近平新时代中国特色社会主义思想', date: '2026-06-01', url: 'software/dangjian/articles/article1.html' },
-        { id: 2, tag: '政策解读', title: '党的二十大精神解读与实践指引', date: '2026-05-25', url: 'software/dangjian/articles/article2.html' },
-        { id: 3, tag: '党史学习', title: '从百年党史中汲取奋进力量', date: '2026-05-18', url: 'software/dangjian/articles/article3.html' },
-        { id: 4, tag: '党风廉政', title: '新时代党风廉政建设与反腐败斗争', date: '2026-05-10', url: 'software/dangjian/articles/article4.html' }
     ],
     // 热门软件
     hotSoftware: [
@@ -107,6 +109,16 @@ const softwareData = {
         },
         {
             id: 2,
+            name: '智慧党建管理系统',
+            icon: '🏛️',
+            desc: '专为基层党组织打造的一站式数字化党建管理平台，覆盖党员管理、在线学习、三会一课、党费收缴、志愿服务等14大功能模块，助力党建工作提质增效。',
+            downloads: '5,280',
+            size: 'Web端',
+            category: '办公协作',
+            url: 'software/dangjian/index.html'
+        },
+        {
+            id: 3,
             name: 'Adobe Photoshop 2026',
             icon: '🎨',
             desc: '全球最专业的图片编辑软件，提供强大的图像处理、图形设计和照片修饰功能。',
@@ -150,7 +162,7 @@ const softwareData = {
             size: '52MB',
             category: '输入法'
         }
-    ]
+    ],
 };
 
 // 渲染精选推荐
@@ -316,7 +328,6 @@ document.addEventListener('DOMContentLoaded', () => {
     renderRanking();
     renderLatest();
     renderHotSoftware();
-    renderDjArticles();
     initCarousel();
     initRankingTabs();
     initSearch();
