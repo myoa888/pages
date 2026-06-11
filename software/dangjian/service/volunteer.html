@@ -1,0 +1,150 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>志愿服务</title>
+    <link rel="stylesheet" href="libs/element-ui.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #f0f2f5; font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+        .page { padding: 20px; }
+        .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
+        .stat-box { background: #fff; border-radius: 8px; padding: 20px 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); text-align: center; }
+        .stat-box .num { font-size: 28px; font-weight: 700; color: #303133; }
+        .stat-box .txt { font-size: 13px; color: #909399; margin-top: 6px; }
+        .card { background: #fff; border-radius: 8px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); margin-bottom: 16px; }
+        .card .card-title { font-size: 15px; font-weight: 600; color: #303133; padding-bottom: 12px; border-bottom: 1px solid #ebeef5; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
+        .service-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        .service-card {
+            background: #fff; border-radius: 8px; overflow: hidden;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06); transition: box-shadow 0.3s, transform 0.3s; cursor: pointer;
+        }
+        .service-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.12); transform: translateY(-2px); }
+        .svc-header { height: 100px; display: flex; align-items: center; justify-content: center; font-size: 42px; color: #fff; }
+        .svc-body { padding: 16px; }
+        .svc-body .svc-title { font-size: 15px; font-weight: 600; color: #303133; margin-bottom: 8px; }
+        .svc-body .svc-info { font-size: 12px; color: #909399; line-height: 1.6; }
+        .svc-body .svc-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; padding-top: 12px; border-top: 1px solid #f0f0f0; }
+    </style>
+</head>
+<body>
+<div id="volunteer">
+<div class="page">
+    <div class="stat-row">
+        <div class="stat-box"><div class="num" style="color:#e53935;">256</div><div class="txt">志愿服务项目</div></div>
+        <div class="stat-box"><div class="num" style="color:#1e88e5;">1,580<span style="font-size:14px;">h</span></div><div class="txt">服务总时长</div></div>
+        <div class="stat-box"><div class="num" style="color:#43a047;">620</div><div class="txt">参与人次</div></div>
+        <div class="stat-box"><div class="num" style="color:#fb8c00;">4.8<span style="font-size:14px;">分</span></div><div class="txt">服务满意度</div></div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">
+            <span>志愿服务项目</span>
+            <el-button type="primary" size="small" icon="el-icon-plus" @click="openAddService">发布项目</el-button>
+        </div>
+        <div class="service-cards">
+            <div class="service-card" v-for="item in services" :key="item.id">
+                <div class="svc-header" :style="'background:' + item.bg">
+                    <i :class="item.icon"></i>
+                </div>
+                <div class="svc-body">
+                    <div class="svc-title">{{ item.title }}</div>
+                    <div class="svc-info">
+                        <div><i class="el-icon-location-outline"></i> {{ item.location }}</div>
+                        <div><i class="el-icon-time"></i> {{ item.time }}</div>
+                        <div><i class="el-icon-user"></i> 已报名{{ item.signups }}人 / 需要{{ item.needed }}人</div>
+                    </div>
+                    <div class="svc-footer">
+                        <el-tag :type="item.tagType" size="mini">{{ item.tag }}</el-tag>
+                        <el-button type="text" size="small">我要报名</el-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- 发布项目弹窗 -->
+    <el-dialog title="发布志愿服务项目" :visible.sync="addServiceVisible" width="580px" :close-on-click-modal="false">
+        <el-form :model="serviceForm" :rules="serviceRules" ref="serviceFormRef" label-width="100px" size="small">
+            <el-form-item label="项目名称" prop="title">
+                <el-input v-model="serviceForm.title" placeholder="请输入项目名称"></el-input>
+            </el-form-item>
+            <el-form-item label="服务地点" prop="location">
+                <el-input v-model="serviceForm.location" placeholder="请输入服务地点"></el-input>
+            </el-form-item>
+            <el-form-item label="服务时间" prop="time">
+                <el-date-picker v-model="serviceForm.time" type="datetime" placeholder="请选择服务时间" value-format="yyyy-MM-dd HH:mm" style="width:100%;"></el-date-picker>
+            </el-form-item>
+            <el-form-item label="需求人数" prop="needed">
+                <el-input-number v-model="serviceForm.needed" :min="1" :max="200" style="width:100%;"></el-input-number>
+            </el-form-item>
+            <el-form-item label="项目描述" prop="description">
+                <el-input type="textarea" :rows="3" v-model="serviceForm.description" placeholder="请输入项目描述"></el-input>
+            </el-form-item>
+        </el-form>
+        <span slot="footer">
+            <el-button size="small" @click="addServiceVisible = false">取消</el-button>
+            <el-button type="primary" size="small" @click="submitService">确认发布</el-button>
+        </span>
+    </el-dialog>
+</div>
+
+<script src="libs/vue.min.js"></script>
+<script src="libs/element-ui.js"></script>
+<script>
+new Vue({
+    el: '#volunteer',
+    data: {
+        addServiceVisible: false,
+        curSvcId: 10,
+        serviceForm: { title: '', location: '', time: '', needed: 30, description: '' },
+        serviceRules: {
+            title: [{ required: true, message: '请输入项目名称', trigger: 'blur' }],
+            location: [{ required: true, message: '请输入服务地点', trigger: 'blur' }],
+            time: [{ required: true, message: '请选择服务时间', trigger: 'change' }]
+        },
+        services: [
+            { id: 1, title: '社区环境清洁日', icon: 'el-icon-s-home', bg: 'linear-gradient(135deg, #43a047, #2e7d32)', location: '阳光社区', time: '2026-06-18 08:00', signups: 35, needed: 40, tag: '招募中', tagType: 'primary' },
+            { id: 2, title: '关爱空巢老人', icon: 'el-icon-s-custom', bg: 'linear-gradient(135deg, #fb8c00, #ef6c00)', location: '老年公寓', time: '2026-06-20 14:00', signups: 28, needed: 30, tag: '即将开始', tagType: 'warning' },
+            { id: 3, title: '爱心助学活动', icon: 'el-icon-s-data', bg: 'linear-gradient(135deg, #1e88e5, #1565c0)', location: '希望小学', time: '2026-06-25 09:00', signups: 22, needed: 25, tag: '招募中', tagType: 'primary' },
+            { id: 4, title: '义务植树造林', icon: 'el-icon-s-marketing', bg: 'linear-gradient(135deg, #e53935, #c62828)', location: '西山公园', time: '2026-06-05 07:30', signups: 50, needed: 50, tag: '已完成', tagType: 'success' },
+            { id: 5, title: '便民义诊服务', icon: 'el-icon-s-check', bg: 'linear-gradient(135deg, #00897b, #00695c)', location: '社区广场', time: '2026-06-28 08:30', signups: 18, needed: 30, tag: '招募中', tagType: 'primary' },
+            { id: 6, title: '党史宣传进社区', icon: 'el-icon-s-flag', bg: 'linear-gradient(135deg, #2563eb, #1e40af)', location: '各社区', time: '2026-07-05 09:00', signups: 45, needed: 60, tag: '招募中', tagType: 'primary' }
+        ]
+    },
+    methods: {
+        openAddService() {
+            this.serviceForm = { title: '', location: '', time: '', needed: 30, description: '' };
+            this.addServiceVisible = true;
+        },
+        submitService() {
+            var that = this;
+            this.$refs.serviceFormRef.validate(function(valid) {
+                if (!valid) return false;
+                var bgs = ['linear-gradient(135deg, #43a047, #2e7d32)', 'linear-gradient(135deg, #fb8c00, #ef6c00)', 'linear-gradient(135deg, #1e88e5, #1565c0)', 'linear-gradient(135deg, #e53935, #c62828)', 'linear-gradient(135deg, #00897b, #00695c)', 'linear-gradient(135deg, #2563eb, #1e40af)'];
+                var icons = ['el-icon-s-home', 'el-icon-s-custom', 'el-icon-s-data', 'el-icon-s-marketing', 'el-icon-s-check', 'el-icon-s-flag'];
+                var idx = ++that.curSvcId % bgs.length;
+                var newService = {
+                    id: that.curSvcId,
+                    title: that.serviceForm.title,
+                    icon: icons[idx],
+                    bg: bgs[idx],
+                    location: that.serviceForm.location,
+                    time: that.serviceForm.time,
+                    signups: 0,
+                    needed: that.serviceForm.needed,
+                    tag: '招募中',
+                    tagType: 'primary'
+                };
+                that.services.unshift(newService);
+                that.addServiceVisible = false;
+                that.$message.success('发布项目成功！');
+            });
+        }
+    }
+});
+</script>
+</body>
+</html>

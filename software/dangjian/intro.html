@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智慧党建管理系统 - 功能介绍</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif; background: #f5f7fa; color: #333; line-height: 1.8; }
+        .hero { background: linear-gradient(135deg, #c62828, #b71c1c); color: #fff; padding: 60px 0; text-align: center; }
+        .hero h1 { font-size: 36px; margin-bottom: 12px; }
+        .hero p { font-size: 18px; opacity: 0.9; max-width: 600px; margin: 0 auto 24px; }
+        .hero .btn { display: inline-block; padding: 14px 36px; background: #ffd54f; color: #c62828; border-radius: 30px; font-weight: 700; font-size: 16px; text-decoration: none; transition: all 0.3s; }
+        .hero .btn:hover { background: #ffca28; transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.3); }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+        .breadcrumb { padding: 16px 0; font-size: 14px; color: #666; }
+        .breadcrumb a { color: #c62828; text-decoration: none; }
+        .section { padding: 50px 0; }
+        .section-title { text-align: center; font-size: 28px; margin-bottom: 16px; color: #222; }
+        .section-desc { text-align: center; color: #888; margin-bottom: 40px; font-size: 15px; }
+        .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        @media (max-width: 768px) { .feature-grid { grid-template-columns: 1fr; } }
+        .feature-card { background: #fff; border-radius: 12px; padding: 30px 24px; text-align: center; transition: all 0.3s; border: 1px solid #eee; }
+        .feature-card:hover { transform: translateY(-6px); box-shadow: 0 8px 30px rgba(0,0,0,0.1); border-color: #ef9a9a; }
+        .feature-icon { font-size: 44px; margin-bottom: 16px; }
+        .feature-card h3 { font-size: 18px; margin-bottom: 10px; color: #222; }
+        .feature-card p { font-size: 14px; color: #777; }
+        .modules { background: #fff; }
+        .module-list { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+        @media (max-width: 768px) { .module-list { grid-template-columns: repeat(2, 1fr); } }
+        .module-item { background: #fafafa; border-radius: 10px; padding: 20px; text-align: center; transition: all 0.3s; border: 1px solid #f0f0f0; }
+        .module-item:hover { border-color: #ef9a9a; background: #fff5f5; }
+        .module-item .icon { font-size: 32px; margin-bottom: 8px; }
+        .module-item .name { font-weight: 600; font-size: 15px; }
+        .cta { background: linear-gradient(135deg, #c62828, #e53935); color: #fff; text-align: center; padding: 60px 0; }
+        .cta h2 { font-size: 28px; margin-bottom: 16px; }
+        .cta .btn { display: inline-block; padding: 14px 40px; background: #fff; color: #c62828; border-radius: 30px; font-weight: 700; font-size: 16px; text-decoration: none; margin: 0 10px; transition: all 0.3s; }
+        .cta .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.3); }
+        .cta .btn-outline { background: transparent; border: 2px solid #fff; color: #fff; }
+        .footer { background: #1a1a2e; color: #a0a0a0; text-align: center; padding: 30px 0; font-size: 13px; }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <div class="container">
+            <h1>🏛️ 智慧党建管理系统</h1>
+            <p>专为基层党组织打造的一站式数字化党建管理平台，助力党建工作提质增效</p>
+            <a href="service/index.html" class="btn">进入管理系统</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="../../index.html">首页</a> &gt; <span>智慧党建管理系统</span>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="container">
+            <h2 class="section-title">核心功能</h2>
+            <p class="section-desc">覆盖党建工作的方方面面，实现全流程数字化管理</p>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">👥</div>
+                    <h3>党员管理</h3>
+                    <p>党员信息全面管理，入党流程在线跟踪，组织关系便捷转接</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📚</div>
+                    <h3>在线学习</h3>
+                    <p>丰富的党建课程资源，学习进度追踪，在线考核评估</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📅</div>
+                    <h3>会议管理</h3>
+                    <p>三会一课在线记录，会议通知一键发送，签到统计自动化</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <h3>党费管理</h3>
+                    <p>党费标准灵活设置，收缴记录清晰可查，统计报表自动生成</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>志愿服务</h3>
+                    <p>志愿活动在线发布与报名，服务时长实时记录，积分排行激励</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>数据报表</h3>
+                    <p>多维数据可视化分析，党建工作一目了然，辅助科学决策</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section modules">
+        <div class="container">
+            <h2 class="section-title">功能模块</h2>
+            <p class="section-desc">14 大功能模块，满足基层党建全部场景需求</p>
+            <div class="module-list">
+                <div class="module-item"><div class="icon">📋</div><div class="name">首页概览</div></div>
+                <div class="module-item"><div class="icon">👥</div><div class="name">党员管理</div></div>
+                <div class="module-item"><div class="icon">🏢</div><div class="name">组织架构</div></div>
+                <div class="module-item"><div class="icon">📅</div><div class="name">会议管理</div></div>
+                <div class="module-item"><div class="icon">📚</div><div class="name">党员教育</div></div>
+                <div class="module-item"><div class="icon">💰</div><div class="name">党费管理</div></div>
+                <div class="module-item"><div class="icon">🎯</div><div class="name">活动管理</div></div>
+                <div class="module-item"><div class="icon">🤝</div><div class="name">志愿服务</div></div>
+                <div class="module-item"><div class="icon">📝</div><div class="name">考核评估</div></div>
+                <div class="module-item"><div class="icon">🔔</div><div class="name">通知公告</div></div>
+                <div class="module-item"><div class="icon">🏛️</div><div class="name">服务大厅</div></div>
+                <div class="module-item"><div class="icon">📊</div><div class="name">报表统计</div></div>
+                <div class="module-item"><div class="icon">📮</div><div class="name">投诉建议</div></div>
+                <div class="module-item"><div class="icon">⚙️</div><div class="name">系统设置</div></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="cta">
+        <div class="container">
+            <h2>立即体验智慧党建管理系统</h2>
+            <p style="opacity:0.9;margin-bottom:24px;">免费使用，安全可靠，助力基层党组织数字化升级</p>
+            <a href="service/index.html" class="btn">进入系统</a>
+            <a href="articles/index.html" class="btn btn-outline">学习园地</a>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2026 软件优选 - 智慧党建管理系统 | 全心全意为人民服务</p>
+    </div>
+</body>
+</html>

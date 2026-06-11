@@ -23,7 +23,7 @@
 .logo h1 {
     font-size: 28px;
     font-weight: 700;
-    background: linear-gradient(135deg, var(--primary-color), #8b5cf6);
+    background: linear-gradient(135deg, var(--primary-color), #06b6d4);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -145,7 +145,7 @@
     position: relative;
     border-radius: var(--radius-lg);
     overflow: hidden;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #3b82f6 0%, #0891b2 100%);
     min-height: 360px;
 }
 
@@ -659,6 +659,172 @@
     padding: 8px 16px;
     font-size: 13px;
     align-self: center;
+}
+
+/* ==================== 党建专区 ==================== */
+.dangjian-section {
+    background: #fffaf5;
+}
+
+.dangjian-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+@media (max-width: 768px) {
+    .dangjian-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.dj-card {
+    background: #fff;
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    border: 1px solid #f0e6e6;
+    transition: all 0.3s;
+}
+
+.dj-card:hover {
+    box-shadow: 0 4px 20px rgba(198, 40, 40, 0.08);
+}
+
+.dj-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid #ffebee;
+}
+
+.dj-card-header .dj-icon {
+    font-size: 28px;
+}
+
+.dj-card-header h3 {
+    font-size: 20px;
+    color: #c62828;
+    font-weight: 700;
+}
+
+.dj-article-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.dj-article-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 8px;
+    transition: all 0.3s;
+    text-decoration: none;
+    color: inherit;
+    background: #fafafa;
+}
+
+.dj-article-item:hover {
+    background: #fff5f5;
+    transform: translateX(4px);
+}
+
+.dj-article-tag {
+    padding: 3px 8px;
+    background: #ffebee;
+    color: #c62828;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.dj-article-title {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+}
+
+.dj-article-date {
+    font-size: 12px;
+    color: #999;
+    white-space: nowrap;
+}
+
+.dj-more {
+    display: block;
+    text-align: center;
+    padding: 10px;
+    color: #c62828;
+    font-weight: 500;
+    font-size: 14px;
+    border-radius: 8px;
+    background: #fff5f5;
+    transition: all 0.3s;
+    text-decoration: none;
+}
+
+.dj-more:hover {
+    background: #ffebee;
+}
+
+.dj-desc {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.8;
+    margin-bottom: 20px;
+}
+
+.dj-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 24px;
+}
+
+.dj-features span {
+    padding: 6px 14px;
+    background: #fff5f5;
+    border-radius: 20px;
+    font-size: 13px;
+    color: #555;
+    border: 1px solid #fce4e4;
+}
+
+.dj-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.dj-actions .btn {
+    padding: 10px 24px;
+    font-size: 14px;
+    background: #c62828;
+    color: #fff;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.3s;
+    font-weight: 500;
+}
+
+.dj-actions .btn:hover {
+    background: #b71c1c;
+    transform: translateY(-1px);
+}
+
+.dj-actions .btn-outline {
+    background: transparent;
+    color: #c62828;
+    border: 1px solid #c62828;
+}
+
+.dj-actions .btn-outline:hover {
+    background: #fff5f5;
 }
 
 /* ==================== 合作伙伴 ==================== */

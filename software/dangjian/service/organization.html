@@ -1,0 +1,193 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>组织架构</title>
+    <link rel="stylesheet" href="libs/element-ui.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #f0f2f5; font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+        .page { padding: 20px; }
+        .search-bar { background: #fff; padding: 20px; border-radius: 8px; margin-bottom: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+        .content-wrap { display: grid; grid-template-columns: 300px 1fr; gap: 16px; }
+        .tree-card { background: #fff; border-radius: 8px; padding: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); min-height: 500px; }
+        .tree-card .card-title { font-size: 15px; font-weight: 600; color: #303133; padding-bottom: 12px; border-bottom: 1px solid #ebeef5; margin-bottom: 12px; }
+        .detail-card { background: #fff; border-radius: 8px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+        .detail-card .card-title { font-size: 15px; font-weight: 600; color: #303133; padding-bottom: 12px; border-bottom: 1px solid #ebeef5; margin-bottom: 16px; }
+        .org-info { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 30px; }
+        .org-info .info-item { display: flex; align-items: center; font-size: 14px; color: #606266; }
+        .org-info .info-item .label { color: #909399; width: 80px; flex-shrink: 0; }
+        .member-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 16px; }
+        .member-stat { text-align: center; padding: 16px; background: #f5f7fa; border-radius: 6px; }
+        .member-stat .num { font-size: 24px; font-weight: 700; color: #c62828; }
+        .member-stat .txt { font-size: 12px; color: #909399; margin-top: 4px; }
+        .empty-tip { text-align: center; padding: 60px 0; color: #909399; }
+    </style>
+</head>
+<body>
+<div id="organization">
+<div class="page">
+    <div class="search-bar">
+        <el-form :inline="true" size="small">
+            <el-form-item label="组织名称">
+                <el-input v-model="searchName" placeholder="请输入组织名称" clearable></el-input>
+            </el-form-item>
+            <el-form-item label="组织类型">
+                <el-select v-model="searchType" placeholder="请选择" clearable>
+                    <el-option label="党委" value="party-committee"></el-option>
+                    <el-option label="党总支" value="general-branch"></el-option>
+                    <el-option label="党支部" value="branch"></el-option>
+                    <el-option label="党小组" value="group"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" icon="el-icon-search">查询</el-button>
+                <el-button type="success" icon="el-icon-plus" @click="openAddOrg">新增组织</el-button>
+            </el-form-item>
+        </el-form>
+    </div>
+
+    <!-- 新增组织弹窗 -->
+    <el-dialog title="新增组织" :visible.sync="addOrgVisible" width="580px" :close-on-click-modal="false">
+        <el-form :model="orgForm" :rules="orgRules" ref="orgFormRef" label-width="100px" size="small">
+            <el-form-item label="组织名称" prop="name">
+                <el-input v-model="orgForm.name" placeholder="请输入组织名称"></el-input>
+            </el-form-item>
+            <el-form-item label="组织类型" prop="type">
+                <el-select v-model="orgForm.type" placeholder="请选择组织类型" style="width:100%;">
+                    <el-option label="党委" value="党委"></el-option>
+                    <el-option label="党总支" value="党总支"></el-option>
+                    <el-option label="党支部" value="党支部"></el-option>
+                    <el-option label="党小组" value="党小组"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="上级组织" prop="parent">
+                <el-input v-model="orgForm.parent" placeholder="请输入上级组织名称"></el-input>
+            </el-form-item>
+            <el-form-item label="组织书记" prop="secretary">
+                <el-input v-model="orgForm.secretary" placeholder="请输入书记姓名"></el-input>
+            </el-form-item>
+            <el-form-item label="联系电话" prop="phone">
+                <el-input v-model="orgForm.phone" placeholder="请输入联系电话"></el-input>
+            </el-form-item>
+            <el-form-item label="成立时间" prop="established">
+                <el-date-picker v-model="orgForm.established" type="date" placeholder="请选择成立时间" value-format="yyyy-MM-dd" style="width:100%;"></el-date-picker>
+            </el-form-item>
+            <el-form-item label="组织地址" prop="address">
+                <el-input v-model="orgForm.address" placeholder="请输入组织地址"></el-input>
+            </el-form-item>
+        </el-form>
+        <span slot="footer">
+            <el-button size="small" @click="addOrgVisible = false">取消</el-button>
+            <el-button type="primary" size="small" @click="submitOrg">确认新增</el-button>
+        </span>
+    </el-dialog>
+
+    <div class="content-wrap">
+        <div class="tree-card">
+            <div class="card-title">组织架构树</div>
+            <el-tree
+                :data="treeData"
+                :props="treeProps"
+                node-key="id"
+                default-expand-all
+                highlight-current
+                @node-click="handleNodeClick"
+            ></el-tree>
+        </div>
+        <div class="detail-card">
+            <template v-if="currentOrg">
+                <div class="card-title">{{ currentOrg.name }} - 详细信息</div>
+                <div class="org-info">
+                    <div class="info-item"><span class="label">组织类型：</span>{{ currentOrg.type }}</div>
+                    <div class="info-item"><span class="label">上级组织：</span>{{ currentOrg.parent || '无' }}</div>
+                    <div class="info-item"><span class="label">成立时间：</span>{{ currentOrg.established }}</div>
+                    <div class="info-item"><span class="label">组织书记：</span>{{ currentOrg.secretary }}</div>
+                    <div class="info-item"><span class="label">联系电话：</span>{{ currentOrg.phone }}</div>
+                    <div class="info-item"><span class="label">组织地址：</span>{{ currentOrg.address }}</div>
+                </div>
+                <div class="member-stats">
+                    <div class="member-stat"><div class="num">{{ currentOrg.totalMembers }}</div><div class="txt">党员总数</div></div>
+                    <div class="member-stat"><div class="num">{{ currentOrg.maleMembers }}</div><div class="txt">男党员</div></div>
+                    <div class="member-stat"><div class="num">{{ currentOrg.femaleMembers }}</div><div class="txt">女党员</div></div>
+                    <div class="member-stat"><div class="num">{{ currentOrg.avgAge }}</div><div class="txt">平均年龄</div></div>
+                </div>
+            </template>
+            <template v-else>
+                <div class="empty-tip"><i class="el-icon-info" style="font-size:48px;color:#dcdfe6;"></i><p style="margin-top:12px;">请从左侧选择组织查看详情</p></div>
+            </template>
+        </div>
+    </div>
+</div>
+</div>
+
+<script src="libs/vue.min.js"></script>
+<script src="libs/element-ui.js"></script>
+<script>
+new Vue({
+    el: '#organization',
+    data: {
+        searchName: '',
+        searchType: '',
+        currentOrg: null,
+        treeProps: { children: 'children', label: 'name' },
+        treeData: [
+            { id: 1, name: '中共XX集团委员会', type: '党委', parent: '无', established: '2005-03-15', secretary: '张书记', phone: '010-12345678', address: '北京市朝阳区XX路100号', totalMembers: 1286, maleMembers: 820, femaleMembers: 466, avgAge: 38, children: [
+                { id: 2, name: '第一党总支', type: '党总支', parent: 'XX集团党委', established: '2006-06-01', secretary: '李书记', phone: '010-12345679', address: '北京市朝阳区XX路101号', totalMembers: 420, maleMembers: 268, femaleMembers: 152, avgAge: 36, children: [
+                    { id: 5, name: '第一党支部', type: '党支部', parent: '第一党总支', established: '2007-01-10', secretary: '王书记', phone: '010-12345680', address: '北京市朝阳区XX路102号', totalMembers: 85, maleMembers: 55, femaleMembers: 30, avgAge: 34, children: [] },
+                    { id: 6, name: '第二党支部', type: '党支部', parent: '第一党总支', established: '2007-01-10', secretary: '赵书记', phone: '010-12345681', address: '北京市朝阳区XX路103号', totalMembers: 78, maleMembers: 48, femaleMembers: 30, avgAge: 35, children: [] },
+                    { id: 7, name: '第三党支部', type: '党支部', parent: '第一党总支', established: '2007-03-20', secretary: '刘书记', phone: '010-12345682', address: '北京市朝阳区XX路104号', totalMembers: 92, maleMembers: 60, femaleMembers: 32, avgAge: 33, children: [] }
+                ]},
+                { id: 3, name: '第二党总支', type: '党总支', parent: 'XX集团党委', established: '2006-06-01', secretary: '陈书记', phone: '010-12345683', address: '北京市海淀区XX路200号', totalMembers: 380, maleMembers: 242, femaleMembers: 138, avgAge: 37, children: [
+                    { id: 8, name: '第四党支部', type: '党支部', parent: '第二党总支', established: '2007-01-10', secretary: '周书记', phone: '010-12345684', address: '北京市海淀区XX路201号', totalMembers: 76, maleMembers: 48, femaleMembers: 28, avgAge: 35, children: [] },
+                    { id: 9, name: '第五党支部', type: '党支部', parent: '第二党总支', established: '2007-05-15', secretary: '吴书记', phone: '010-12345685', address: '北京市海淀区XX路202号', totalMembers: 68, maleMembers: 44, femaleMembers: 24, avgAge: 36, children: [] }
+                ]},
+                { id: 4, name: '第三党总支', type: '党总支', parent: 'XX集团党委', established: '2008-03-01', secretary: '杨书记', phone: '010-12345686', address: '北京市丰台区XX路300号', totalMembers: 486, maleMembers: 310, femaleMembers: 176, avgAge: 40, children: [
+                    { id: 10, name: '第六党支部', type: '党支部', parent: '第三党总支', established: '2008-06-01', secretary: '黄书记', phone: '010-12345687', address: '北京市丰台区XX路301号', totalMembers: 82, maleMembers: 52, femaleMembers: 30, avgAge: 38, children: [] }
+                ]}
+            ]}
+        ],
+        addOrgVisible: false,
+        curId: 15,
+        orgForm: { name: '', type: '', parent: '', secretary: '', phone: '', established: '', address: '' },
+        orgRules: {
+            name: [{ required: true, message: '请输入组织名称', trigger: 'blur' }],
+            type: [{ required: true, message: '请选择组织类型', trigger: 'change' }],
+            secretary: [{ required: true, message: '请输入书记姓名', trigger: 'blur' }]
+        }
+    },
+    methods: {
+        handleNodeClick(data) {
+            this.currentOrg = data;
+        },
+        openAddOrg() {
+            this.orgForm = { name: '', type: '', parent: '', secretary: '', phone: '', established: '', address: '' };
+            this.addOrgVisible = true;
+        },
+        submitOrg() {
+            var that = this;
+            this.$refs.orgFormRef.validate(function(valid) {
+                if (!valid) return false;
+                var newOrg = {
+                    id: ++that.curId,
+                    name: that.orgForm.name,
+                    type: that.orgForm.type,
+                    parent: that.orgForm.parent || '无',
+                    established: that.orgForm.established,
+                    secretary: that.orgForm.secretary,
+                    phone: that.orgForm.phone,
+                    address: that.orgForm.address,
+                    totalMembers: 0, maleMembers: 0, femaleMembers: 0, avgAge: 0,
+                    children: []
+                };
+                that.treeData.push(newOrg);
+                that.addOrgVisible = false;
+                that.$message.success('新增组织成功！');
+            });
+        }
+    }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,188 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>党费管理</title>
+    <link rel="stylesheet" href="libs/element-ui.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #f0f2f5; font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+        .page { padding: 20px; }
+        .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
+        .stat-box { background: #fff; border-radius: 8px; padding: 20px 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); text-align: center; }
+        .stat-box .num { font-size: 28px; font-weight: 700; color: #303133; }
+        .stat-box .txt { font-size: 13px; color: #909399; margin-top: 6px; }
+        .stat-box.highlight .num { color: #c62828; }
+        .card { background: #fff; border-radius: 8px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); margin-bottom: 16px; }
+        .card .card-title { font-size: 15px; font-weight: 600; color: #303133; padding-bottom: 12px; border-bottom: 1px solid #ebeef5; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
+        .year-selector { display: flex; align-items: center; gap: 10px; }
+    </style>
+</head>
+<body>
+<div id="dues">
+<div class="page">
+    <div class="stat-row">
+        <div class="stat-box highlight"><div class="num">¥58,620</div><div class="txt">本月应收党费</div></div>
+        <div class="stat-box"><div class="num">¥57,850</div><div class="txt">本月实收党费</div></div>
+        <div class="stat-box"><div class="num" style="color:#43a047;">98.7%</div><div class="txt">收缴率</div></div>
+        <div class="stat-box"><div class="num" style="color:#fb8c00;">¥770</div><div class="txt">待缴纳金额</div></div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">
+            <span>党费缴纳明细</span>
+            <div class="year-selector">
+                <el-button type="primary" size="small" icon="el-icon-plus" @click="openAddDue" style="margin-right:10px;">新增记录</el-button>
+                <el-select v-model="selectedYear" size="small" style="width:100px;">
+                    <el-option label="2026年" value="2026"></el-option>
+                    <el-option label="2025年" value="2025"></el-option>
+                    <el-option label="2024年" value="2024"></el-option>
+                </el-select>
+                <el-select v-model="selectedMonth" size="small" style="width:80px;">
+                    <el-option label="1月" value="1"></el-option>
+                    <el-option label="2月" value="2"></el-option>
+                    <el-option label="3月" value="3"></el-option>
+                    <el-option label="4月" value="4"></el-option>
+                    <el-option label="5月" value="5"></el-option>
+                    <el-option label="6月" value="6"></el-option>
+                </el-select>
+            </div>
+        </div>
+        <el-table :data="duesData" border stripe style="width:100%">
+            <el-table-column prop="branch" label="支部名称" min-width="150"></el-table-column>
+            <el-table-column prop="totalMembers" label="党员人数" width="100" align="center"></el-table-column>
+            <el-table-column prop="receivable" label="应收金额(元)" width="120" align="right"></el-table-column>
+            <el-table-column prop="received" label="实收金额(元)" width="120" align="right"></el-table-column>
+            <el-table-column prop="unpaid" label="未缴金额(元)" width="120" align="right"></el-table-column>
+            <el-table-column prop="rate" label="收缴率" width="100" align="center">
+                <template slot-scope="scope">
+                    <el-progress :percentage="scope.row.rate" :color="scope.row.rate >= 95 ? '#43a047' : scope.row.rate >= 80 ? '#fb8c00' : '#e53935'" :stroke-width="8"></el-progress>
+                </template>
+            </el-table-column>
+            <el-table-column label="状态" width="100" align="center">
+                <template slot-scope="scope">
+                    <el-tag :type="scope.row.status === '已完成' ? 'success' : 'warning'" size="small">{{ scope.row.status }}</el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column label="操作" width="100" align="center">
+                <template slot-scope="scope">
+                    <el-button type="text" size="small">详情</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>待缴纳党员名单</span></div>
+        <el-table :data="unpaidList" border stripe style="width:100%">
+            <el-table-column prop="name" label="姓名" width="100"></el-table-column>
+            <el-table-column prop="branch" label="所属支部" min-width="140"></el-table-column>
+            <el-table-column prop="amount" label="应缴金额(元)" width="120" align="right"></el-table-column>
+            <el-table-column prop="period" label="欠缴月份" width="150"></el-table-column>
+            <el-table-column label="状态" width="100" align="center">
+                <template slot-scope="scope">
+                    <el-tag type="danger" size="small">{{ scope.row.status }}</el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column label="操作" width="120" align="center">
+                <template>
+                    <el-button type="text" size="small">催缴</el-button>
+                    <el-button type="text" size="small">通知</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+    </div>
+</div>
+
+    <!-- 新增党费记录弹窗 -->
+    <el-dialog title="新增党费记录" :visible.sync="addDueVisible" width="520px" :close-on-click-modal="false">
+        <el-form :model="dueForm" :rules="dueRules" ref="dueFormRef" label-width="100px" size="small">
+            <el-form-item label="所属支部" prop="branch">
+                <el-select v-model="dueForm.branch" placeholder="请选择" style="width:100%;">
+                    <el-option label="第一党支部" value="第一党支部"></el-option>
+                    <el-option label="第二党支部" value="第二党支部"></el-option>
+                    <el-option label="第三党支部" value="第三党支部"></el-option>
+                    <el-option label="第四党支部" value="第四党支部"></el-option>
+                    <el-option label="第五党支部" value="第五党支部"></el-option>
+                    <el-option label="第六党支部" value="第六党支部"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="党员人数" prop="totalMembers">
+                <el-input-number v-model="dueForm.totalMembers" :min="1" :max="500" style="width:100%;"></el-input-number>
+            </el-form-item>
+            <el-form-item label="应收金额(元)" prop="receivable">
+                <el-input-number v-model="dueForm.receivable" :min="0" :precision="2" style="width:100%;"></el-input-number>
+            </el-form-item>
+            <el-form-item label="实收金额(元)" prop="received">
+                <el-input-number v-model="dueForm.received" :min="0" :precision="2" style="width:100%;"></el-input-number>
+            </el-form-item>
+        </el-form>
+        <span slot="footer">
+            <el-button size="small" @click="addDueVisible = false">取消</el-button>
+            <el-button type="primary" size="small" @click="submitDue">确认新增</el-button>
+        </span>
+    </el-dialog>
+</div>
+
+<script src="libs/vue.min.js"></script>
+<script src="libs/element-ui.js"></script>
+<script>
+new Vue({
+    el: '#dues',
+    data: {
+        selectedYear: '2026',
+        selectedMonth: '6',
+        addDueVisible: false,
+        dueForm: { branch: '', totalMembers: 50, receivable: 0, received: 0 },
+        dueRules: {
+            branch: [{ required: true, message: '请选择所属支部', trigger: 'change' }],
+            totalMembers: [{ required: true, message: '请输入党员人数', trigger: 'blur' }],
+            receivable: [{ required: true, message: '请输入应收金额', trigger: 'blur' }]
+        },
+        duesData: [
+            { branch: '第一党支部', totalMembers: 85, receivable: 15300, received: 15100, unpaid: 200, rate: 98.7, status: '已完成' },
+            { branch: '第二党支部', totalMembers: 78, receivable: 14040, received: 13800, unpaid: 240, rate: 98.3, status: '已完成' },
+            { branch: '第三党支部', totalMembers: 92, receivable: 16560, received: 16400, unpaid: 160, rate: 99.0, status: '已完成' },
+            { branch: '第四党支部', totalMembers: 76, receivable: 13680, received: 13500, unpaid: 180, rate: 98.7, status: '已完成' },
+            { branch: '第五党支部', totalMembers: 68, receivable: 12240, received: 12050, unpaid: 190, rate: 98.4, status: '已完成' },
+            { branch: '第六党支部', totalMembers: 82, receivable: 14760, received: 14000, unpaid: 760, rate: 94.9, status: '进行中' }
+        ],
+        unpaidList: [
+            { name: '周文博', branch: '第五党支部', amount: 180, period: '2026年6月', status: '未缴纳' },
+            { name: '刘伟', branch: '第六党支部', amount: 180, period: '2026年5-6月', status: '未缴纳' },
+            { name: '陈丽', branch: '第六党支部', amount: 180, period: '2026年6月', status: '未缴纳' },
+            { name: '赵强', branch: '第六党支部', amount: 180, period: '2026年6月', status: '未缴纳' }
+        ]
+    },
+    methods: {
+        openAddDue() {
+            this.dueForm = { branch: '', totalMembers: 50, receivable: 0, received: 0 };
+            this.addDueVisible = true;
+        },
+        submitDue() {
+            var that = this;
+            this.$refs.dueFormRef.validate(function(valid) {
+                if (!valid) return false;
+                var df = that.dueForm;
+                var unpaid = (df.receivable - df.received).toFixed(2);
+                var rate = df.receivable > 0 ? Math.round(df.received / df.receivable * 1000) / 10 : 0;
+                var newDue = {
+                    branch: df.branch,
+                    totalMembers: df.totalMembers,
+                    receivable: df.receivable,
+                    received: df.received,
+                    unpaid: parseFloat(unpaid),
+                    rate: rate,
+                    status: rate >= 100 ? '已完成' : '进行中'
+                };
+                that.duesData.unshift(newDue);
+                that.addDueVisible = false;
+                that.$message.success('新增党费记录成功！');
+            });
+        }
+    }
+});
+</script>
+</body>
+</html>

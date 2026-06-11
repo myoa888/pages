@@ -1,0 +1,155 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系统设置</title>
+    <link rel="stylesheet" href="libs/element-ui.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #f0f2f5; font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+        .page { padding: 20px; max-width: 900px; }
+        .card { background: #fff; border-radius: 8px; padding: 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); margin-bottom: 16px; }
+        .card .card-title { font-size: 16px; font-weight: 600; color: #303133; padding-bottom: 14px; border-bottom: 1px solid #ebeef5; margin-bottom: 20px; display: flex; align-items: center; }
+        .card .card-title i { margin-right: 8px; font-size: 18px; color: #c62828; }
+        .form-section { max-width: 600px; }
+    </style>
+</head>
+<body>
+<div id="settings">
+<div class="page">
+    <!-- 基本设置 -->
+    <div class="card">
+        <div class="card-title"><i class="el-icon-s-tools"></i> 基本设置</div>
+        <div class="form-section">
+            <el-form :model="basicForm" label-width="100px" size="small">
+                <el-form-item label="系统名称">
+                    <el-input v-model="basicForm.systemName"></el-input>
+                </el-form-item>
+                <el-form-item label="系统Logo">
+                    <el-upload action="#" :show-file-list="false">
+                        <el-button size="small" icon="el-icon-upload">上传Logo</el-button>
+                    </el-upload>
+                </el-form-item>
+                <el-form-item label="管理员邮箱">
+                    <el-input v-model="basicForm.email"></el-input>
+                </el-form-item>
+                <el-form-item label="联系电话">
+                    <el-input v-model="basicForm.phone"></el-input>
+                </el-form-item>
+                <el-form-item label="系统公告">
+                    <el-input v-model="basicForm.notice" type="textarea" :rows="3"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary">保存设置</el-button>
+                </el-form-item>
+            </el-form>
+        </div>
+    </div>
+
+    <!-- 权限管理 -->
+    <div class="card">
+        <div class="card-title"><i class="el-icon-lock"></i> 角色与权限</div>
+        <el-table :data="roles" border stripe style="width:100%">
+            <el-table-column prop="name" label="角色名称" width="150"></el-table-column>
+            <el-table-column prop="code" label="角色编码" width="150"></el-table-column>
+            <el-table-column prop="count" label="用户数" width="100" align="center"></el-table-column>
+            <el-table-column prop="desc" label="描述"></el-table-column>
+            <el-table-column label="状态" width="100" align="center">
+                <template>
+                    <el-tag type="success" size="small">启用</el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column label="操作" width="150" align="center">
+                <template>
+                    <el-button type="text" size="small">编辑</el-button>
+                    <el-button type="text" size="small">权限设置</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+    </div>
+
+    <!-- 用户管理 -->
+    <div class="card">
+        <div class="card-title"><i class="el-icon-user"></i> 管理员账号</div>
+        <el-table :data="users" border stripe style="width:100%">
+            <el-table-column prop="username" label="用户名" width="150"></el-table-column>
+            <el-table-column prop="realName" label="姓名" width="120"></el-table-column>
+            <el-table-column prop="role" label="角色" width="120"></el-table-column>
+            <el-table-column prop="email" label="邮箱"></el-table-column>
+            <el-table-column prop="lastLogin" label="最后登录" width="160"></el-table-column>
+            <el-table-column label="状态" width="100" align="center">
+                <template slot-scope="scope">
+                    <el-tag :type="scope.row.status === '正常' ? 'success' : 'danger'" size="small">{{ scope.row.status }}</el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column label="操作" width="150" align="center">
+                <template>
+                    <el-button type="text" size="small">编辑</el-button>
+                    <el-button type="text" size="small" style="color:#e53935;">禁用</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+        <div style="margin-top:12px;">
+            <el-button type="primary" size="small" icon="el-icon-plus">添加管理员</el-button>
+        </div>
+    </div>
+
+    <!-- 系统日志 -->
+    <div class="card">
+        <div class="card-title"><i class="el-icon-document"></i> 操作日志</div>
+        <el-table :data="logs" border stripe style="width:100%">
+            <el-table-column prop="time" label="时间" width="160"></el-table-column>
+            <el-table-column prop="user" label="操作人" width="120"></el-table-column>
+            <el-table-column prop="action" label="操作内容"></el-table-column>
+            <el-table-column prop="ip" label="IP地址" width="140"></el-table-column>
+            <el-table-column label="状态" width="80" align="center">
+                <template>
+                    <el-tag type="success" size="small">成功</el-tag>
+                </template>
+            </el-table-column>
+        </el-table>
+        <div style="margin-top:16px;text-align:right;">
+            <el-pagination :current-page="1" :page-size="10" :total="256" layout="total, prev, pager, next"></el-pagination>
+        </div>
+    </div>
+</div>
+</div>
+
+<script src="libs/vue.min.js"></script>
+<script src="libs/element-ui.js"></script>
+<script>
+new Vue({
+    el: '#settings',
+    data: {
+        basicForm: {
+            systemName: '智慧党建管理系统',
+            email: 'admin@partybuilding.com',
+            phone: '010-12345678',
+            notice: '欢迎使用智慧党建管理系统！如有问题请联系管理员。'
+        },
+        roles: [
+            { name: '超级管理员', code: 'super_admin', count: 2, desc: '拥有系统全部权限' },
+            { name: '党委管理员', code: 'party_admin', count: 5, desc: '管理党委层面事务' },
+            { name: '支部管理员', code: 'branch_admin', count: 32, desc: '管理所属支部事务' },
+            { name: '普通用户', code: 'member', count: 1250, desc: '查看和使用基本功能' }
+        ],
+        users: [
+            { username: 'admin', realName: '张书记', role: '超级管理员', email: 'admin@partybuilding.com', lastLogin: '2026-06-11 08:30:25', status: '正常' },
+            { username: 'liji', realName: '李书记', role: '党委管理员', email: 'liji@partybuilding.com', lastLogin: '2026-06-10 16:45:10', status: '正常' },
+            { username: 'wangshuji', realName: '王书记', role: '支部管理员', email: 'wang@partybuilding.com', lastLogin: '2026-06-10 14:20:05', status: '正常' },
+            { username: 'test01', realName: '测试账号', role: '支部管理员', email: 'test@partybuilding.com', lastLogin: '2026-05-20 09:00:00', status: '已禁用' }
+        ],
+        logs: [
+            { time: '2026-06-11 08:30:25', user: '张书记', action: '登录系统', ip: '192.168.1.100' },
+            { time: '2026-06-11 08:35:12', user: '张书记', action: '查看党员统计报表', ip: '192.168.1.100' },
+            { time: '2026-06-10 16:45:10', user: '李书记', action: '登录系统', ip: '192.168.1.101' },
+            { time: '2026-06-10 16:50:33', user: '李书记', action: '新增党建活动：参观革命纪念馆', ip: '192.168.1.101' },
+            { time: '2026-06-10 14:20:05', user: '王书记', action: '登录系统', ip: '192.168.2.50' },
+            { time: '2026-06-10 14:30:18', user: '王书记', action: '更新党员信息：张建国', ip: '192.168.2.50' }
+        ]
+    }
+});
+</script>
+</body>
+</html>

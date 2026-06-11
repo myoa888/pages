@@ -1,0 +1,221 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学习教育</title>
+    <link rel="stylesheet" href="libs/element-ui.css">
+    <script src="libs/echarts.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #f0f2f5; font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+        .page { padding: 20px; }
+        .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
+        .stat-box { background: #fff; border-radius: 8px; padding: 20px 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); text-align: center; }
+        .stat-box .num { font-size: 28px; font-weight: 700; color: #303133; }
+        .stat-box .txt { font-size: 13px; color: #909399; margin-top: 6px; }
+        .card { background: #fff; border-radius: 8px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); margin-bottom: 16px; }
+        .card .card-title { font-size: 15px; font-weight: 600; color: #303133; padding-bottom: 12px; border-bottom: 1px solid #ebeef5; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
+        .courses { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        .course-card {
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            transition: box-shadow 0.3s, transform 0.3s;
+            cursor: pointer;
+        }
+        .course-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.12); transform: translateY(-2px); }
+        .course-cover {
+            height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .course-cover .cover-icon { font-size: 48px; color: #fff; }
+        .course-cover .cover-badge {
+            position: absolute; top: 10px; right: 10px;
+            background: rgba(0,0,0,0.5); color: #fff;
+            padding: 2px 8px; border-radius: 4px;
+            font-size: 12px;
+        }
+        .course-body { padding: 16px; }
+        .course-body .c-title { font-size: 14px; font-weight: 600; color: #303133; margin-bottom: 8px; }
+        .course-body .c-info { font-size: 12px; color: #909399; }
+        .course-body .c-progress { margin-top: 12px; }
+        .course-body .c-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+        .chart-box { height: 300px; }
+        .content-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    </style>
+</head>
+<body>
+<div id="education">
+<div class="page">
+    <div class="stat-row">
+        <div class="stat-box"><div class="num" style="color:#e53935;">56</div><div class="txt">课程总数</div></div>
+        <div class="stat-box"><div class="num" style="color:#1e88e5;">126.5<span style="font-size:14px;">h</span></div><div class="txt">学习总时长</div></div>
+        <div class="stat-box"><div class="num" style="color:#43a047;">92.8<span style="font-size:16px;">%</span></div><div class="txt">完成率</div></div>
+        <div class="stat-box"><div class="num" style="color:#fb8c00;">8.6<span style="font-size:14px;">分</span></div><div class="txt">平均评价</div></div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">
+            <span>推荐课程</span>
+            <el-button type="primary" size="small" icon="el-icon-plus" @click="openAddCourse">创建课程</el-button>
+        </div>
+        <div class="courses">
+            <div class="course-card" v-for="item in courses" :key="item.id">
+                <div class="course-cover" :style="'background:' + item.bg">
+                    <i :class="item.icon" class="cover-icon"></i>
+                    <span class="cover-badge">{{ item.type }}</span>
+                </div>
+                <div class="course-body">
+                    <div class="c-title">{{ item.title }}</div>
+                    <div class="c-info">{{ item.info }}</div>
+                    <div class="c-progress">
+                        <el-progress :percentage="item.progress" :stroke-width="6" :color="item.progress === 100 ? '#43a047' : '#1e88e5'"></el-progress>
+                    </div>
+                    <div class="c-footer">
+                        <span style="font-size:12px;color:#909399;">{{ item.learners }}人在学</span>
+                        <el-button type="text" size="small">{{ item.progress === 100 ? '重新学习' : '继续学习' }}</el-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-row">
+        <div class="card">
+            <div class="card-title"><span>学习排行</span></div>
+            <el-table :data="rankList" style="width:100%" :show-header="true" stripe>
+                <el-table-column label="排名" width="60" align="center">
+                    <template slot-scope="scope">
+                        <span :style="scope.row.rank <= 3 ? 'color:#e53935;font-weight:bold' : ''">{{ scope.row.rank }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="name" label="姓名"></el-table-column>
+                <el-table-column prop="branch" label="支部"></el-table-column>
+                <el-table-column prop="hours" label="学习时长(h)" align="center"></el-table-column>
+                <el-table-column prop="score" label="积分" align="center"></el-table-column>
+            </el-table>
+        </div>
+        <div class="card">
+            <div class="card-title"><span>学习趋势</span></div>
+            <div class="chart-box" id="studyChart"></div>
+        </div>
+    </div>
+</div>
+
+    <!-- 创建课程弹窗 -->
+    <el-dialog title="创建课程" :visible.sync="addCourseVisible" width="580px" :close-on-click-modal="false">
+        <el-form :model="courseForm" :rules="courseRules" ref="courseFormRef" label-width="100px" size="small">
+            <el-form-item label="课程名称" prop="title">
+                <el-input v-model="courseForm.title" placeholder="请输入课程名称"></el-input>
+            </el-form-item>
+            <el-form-item label="课程类型" prop="cType">
+                <el-select v-model="courseForm.cType" placeholder="请选择课程类型" style="width:100%;">
+                    <el-option label="必修" value="必修"></el-option>
+                    <el-option label="选修" value="选修"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="课时数" prop="hours">
+                <el-input-number v-model="courseForm.hours" :min="1" :max="100" style="width:100%;"></el-input-number>
+            </el-form-item>
+            <el-form-item label="讲师" prop="instructor">
+                <el-input v-model="courseForm.instructor" placeholder="请输入讲师姓名"></el-input>
+            </el-form-item>
+            <el-form-item label="课程描述" prop="description">
+                <el-input type="textarea" :rows="3" v-model="courseForm.description" placeholder="请输入课程描述"></el-input>
+            </el-form-item>
+        </el-form>
+        <span slot="footer">
+            <el-button size="small" @click="addCourseVisible = false">取消</el-button>
+            <el-button type="primary" size="small" @click="submitCourse">确认创建</el-button>
+        </span>
+    </el-dialog>
+</div>
+
+<script src="libs/vue.min.js"></script>
+<script src="libs/element-ui.js"></script>
+<script>
+new Vue({
+    el: '#education',
+    data: {
+        addCourseVisible: false,
+        curCourseId: 10,
+        courseForm: { title: '', cType: '', hours: 16, instructor: '', description: '' },
+        courseRules: {
+            title: [{ required: true, message: '请输入课程名称', trigger: 'blur' }],
+            cType: [{ required: true, message: '请选择课程类型', trigger: 'change' }],
+            instructor: [{ required: true, message: '请输入讲师姓名', trigger: 'blur' }]
+        },
+        courses: [
+            { id: 1, title: '习近平新时代中国特色社会主义思想', type: '必修', info: '32课时 · 张教授', bg: 'linear-gradient(135deg, #e53935, #c62828)', icon: 'el-icon-reading', progress: 75, learners: 856 },
+            { id: 2, title: '中国共产党党史', type: '必修', info: '24课时 · 李教授', bg: 'linear-gradient(135deg, #1e88e5, #1565c0)', icon: 'el-icon-collection', progress: 100, learners: 920 },
+            { id: 3, title: '党章党规解读', type: '必修', info: '16课时 · 王教授', bg: 'linear-gradient(135deg, #43a047, #2e7d32)', icon: 'el-icon-document', progress: 60, learners: 780 },
+            { id: 4, title: '党风廉政建设专题', type: '选修', info: '12课时 · 赵教授', bg: 'linear-gradient(135deg, #2563eb, #1e40af)', icon: 'el-icon-warning-outline', progress: 30, learners: 650 },
+            { id: 5, title: '新时代党建工作方法论', type: '选修', info: '20课时 · 陈教授', bg: 'linear-gradient(135deg, #fb8c00, #ef6c00)', icon: 'el-icon-s-marketing', progress: 45, learners: 520 },
+            { id: 6, title: '党的十九届六中全会精神', type: '必修', info: '18课时 · 杨教授', bg: 'linear-gradient(135deg, #00897b, #00695c)', icon: 'el-icon-s-flag', progress: 90, learners: 890 }
+        ],
+        rankList: [
+            { rank: 1, name: '李明远', branch: '第一党支部', hours: 186, score: 9650 },
+            { rank: 2, name: '张小红', branch: '第三党支部', hours: 172, score: 8920 },
+            { rank: 3, name: '王建国', branch: '第二党支部', hours: 168, score: 8750 },
+            { rank: 4, name: '陈晓华', branch: '第四党支部', hours: 155, score: 8100 },
+            { rank: 5, name: '赵伟', branch: '第一党支部', hours: 148, score: 7860 },
+            { rank: 6, name: '刘芳', branch: '第五党支部', hours: 142, score: 7520 },
+            { rank: 7, name: '周强', branch: '第三党支部', hours: 138, score: 7280 },
+            { rank: 8, name: '黄丽', branch: '第二党支部', hours: 132, score: 6950 }
+        ]
+    },
+    methods: {
+        openAddCourse() {
+            this.courseForm = { title: '', cType: '', hours: 16, instructor: '', description: '' };
+            this.addCourseVisible = true;
+        },
+        submitCourse() {
+            var that = this;
+            this.$refs.courseFormRef.validate(function(valid) {
+                if (!valid) return false;
+                var bgs = ['linear-gradient(135deg, #e53935, #c62828)', 'linear-gradient(135deg, #1e88e5, #1565c0)', 'linear-gradient(135deg, #43a047, #2e7d32)', 'linear-gradient(135deg, #2563eb, #1e40af)', 'linear-gradient(135deg, #fb8c00, #ef6c00)', 'linear-gradient(135deg, #00897b, #00695c)'];
+                var icons = ['el-icon-reading', 'el-icon-collection', 'el-icon-document', 'el-icon-warning-outline', 'el-icon-s-marketing', 'el-icon-s-flag'];
+                var idx = ++that.curCourseId % bgs.length;
+                var newCourse = {
+                    id: that.curCourseId,
+                    title: that.courseForm.title,
+                    type: that.courseForm.cType,
+                    info: that.courseForm.hours + '课时 · ' + that.courseForm.instructor,
+                    bg: bgs[idx],
+                    icon: icons[idx],
+                    progress: 0,
+                    learners: 0
+                };
+                that.courses.unshift(newCourse);
+                that.addCourseVisible = false;
+                that.$message.success('创建课程成功！');
+            });
+        }
+    },
+    mounted() {
+        var chart = echarts.init(document.getElementById('studyChart'));
+        chart.setOption({
+            tooltip: { trigger: 'axis' },
+            grid: { left: '3%', right: '4%', bottom: '5%', top: '8%', containLabel: true },
+            xAxis: { type: 'category', data: ['1月','2月','3月','4月','5月','6月'], axisLabel: { fontSize: 11 } },
+            yAxis: { type: 'value', name: '小时(h)', axisLabel: { fontSize: 11 } },
+            series: [{
+                type: 'line', data: [380, 420, 450, 480, 520, 560],
+                smooth: true, lineStyle: { color: '#e53935', width: 3 },
+                areaStyle: { color: new echarts.graphic.LinearGradient(0,0,0,1, [
+                    { offset: 0, color: 'rgba(229,57,53,0.3)' },
+                    { offset: 1, color: 'rgba(229,57,53,0.02)' }
+                ]) },
+                itemStyle: { color: '#e53935' }
+            }]
+        });
+    }
+});
+</script>
+</body>
+</html>

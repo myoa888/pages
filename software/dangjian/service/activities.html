@@ -1,0 +1,206 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>党建活动</title>
+    <link rel="stylesheet" href="libs/element-ui.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #f0f2f5; font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+        .page { padding: 20px; }
+        .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
+        .stat-box { background: #fff; border-radius: 8px; padding: 20px 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); text-align: center; }
+        .stat-box .num { font-size: 28px; font-weight: 700; color: #303133; }
+        .stat-box .txt { font-size: 13px; color: #909399; margin-top: 6px; }
+        .card { background: #fff; border-radius: 8px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); margin-bottom: 16px; }
+        .card .card-title { font-size: 15px; font-weight: 600; color: #303133; padding-bottom: 12px; border-bottom: 1px solid #ebeef5; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
+        .activity-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        .activity-card {
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            transition: box-shadow 0.3s, transform 0.3s;
+            cursor: pointer;
+        }
+        .activity-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.12); transform: translateY(-2px); }
+        .activity-img {
+            height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: #fff;
+        }
+        .activity-img.type1 { background: linear-gradient(135deg, #e53935, #c62828); }
+        .activity-img.type2 { background: linear-gradient(135deg, #1e88e5, #1565c0); }
+        .activity-img.type3 { background: linear-gradient(135deg, #43a047, #2e7d32); }
+        .activity-img.type4 { background: linear-gradient(135deg, #fb8c00, #ef6c00); }
+        .activity-img.type5 { background: linear-gradient(135deg, #2563eb, #1e40af); }
+        .activity-img.type6 { background: linear-gradient(135deg, #00897b, #00695c); }
+        .activity-body { padding: 16px; }
+        .activity-body .act-title { font-size: 15px; font-weight: 600; color: #303133; margin-bottom: 8px; }
+        .activity-body .act-info { font-size: 12px; color: #909399; line-height: 1.8; }
+        .activity-body .act-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; padding-top: 12px; border-top: 1px solid #f0f0f0; }
+    </style>
+</head>
+<body>
+<div id="activities">
+<div class="page">
+    <div class="stat-row">
+        <div class="stat-box"><div class="num" style="color:#e53935;">186</div><div class="txt">总活动数</div></div>
+        <div class="stat-box"><div class="num" style="color:#1e88e5;">12</div><div class="txt">本月开展</div></div>
+        <div class="stat-box"><div class="num" style="color:#43a047;">8</div><div class="txt">即将开始</div></div>
+        <div class="stat-box"><div class="num" style="color:#fb8c00;">95.2<span style="font-size:16px;">%</span></div><div class="txt">参与率</div></div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">
+            <span>党建活动列表</span>
+            <div>
+                <el-radio-group v-model="listType" size="small">
+                    <el-radio-button label="card">卡片</el-radio-button>
+                    <el-radio-button label="table">表格</el-radio-button>
+                </el-radio-group>
+                <el-button type="primary" size="small" icon="el-icon-plus" style="margin-left:10px;" @click="openAddActivity">新增活动</el-button>
+            </div>
+        </div>
+
+        <!-- 卡片视图 -->
+        <div class="activity-cards" v-if="listType === 'card'">
+            <div class="activity-card" v-for="item in activityList" :key="item.id">
+                <div class="activity-img" :class="'type' + ((item.id % 6) + 1)">
+                    <i :class="item.icon" style="font-size:56px;"></i>
+                </div>
+                <div class="activity-body">
+                    <div class="act-title">{{ item.title }}</div>
+                    <div class="act-info">
+                        <div><i class="el-icon-location-outline"></i> {{ item.location }}</div>
+                        <div><i class="el-icon-time"></i> {{ item.time }}</div>
+                        <div><i class="el-icon-user"></i> {{ item.participants }}人参加</div>
+                    </div>
+                    <div class="act-footer">
+                        <el-tag :type="item.statusType" size="mini">{{ item.status }}</el-tag>
+                        <el-button type="text" size="small">查看详情</el-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 表格视图 -->
+        <el-table v-if="listType === 'table'" :data="activityList" border stripe style="width:100%">
+            <el-table-column prop="title" label="活动名称" min-width="200"></el-table-column>
+            <el-table-column prop="type" label="活动类型" width="100"></el-table-column>
+            <el-table-column prop="location" label="活动地点" min-width="150"></el-table-column>
+            <el-table-column prop="time" label="活动时间" width="160"></el-table-column>
+            <el-table-column prop="participants" label="参与人数" width="100" align="center"></el-table-column>
+            <el-table-column label="状态" width="100" align="center">
+                <template slot-scope="scope">
+                    <el-tag :type="scope.row.statusType" size="small">{{ scope.row.status }}</el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column label="操作" width="150" align="center">
+                <template>
+                    <el-button type="text" size="small">详情</el-button>
+                    <el-button type="text" size="small">编辑</el-button>
+                    <el-button type="text" size="small" style="color:#e53935;">删除</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+    </div>
+</div>
+
+    <!-- 新增活动弹窗 -->
+    <el-dialog title="新增活动" :visible.sync="addActivityVisible" width="580px" :close-on-click-modal="false">
+        <el-form :model="activityForm" :rules="activityRules" ref="activityFormRef" label-width="100px" size="small">
+            <el-form-item label="活动名称" prop="title">
+                <el-input v-model="activityForm.title" placeholder="请输入活动名称"></el-input>
+            </el-form-item>
+            <el-form-item label="活动类型" prop="type">
+                <el-select v-model="activityForm.type" placeholder="请选择活动类型" style="width:100%;">
+                    <el-option label="主题教育" value="主题教育"></el-option>
+                    <el-option label="参观学习" value="参观学习"></el-option>
+                    <el-option label="志愿服务" value="志愿服务"></el-option>
+                    <el-option label="专题学习" value="专题学习"></el-option>
+                    <el-option label="竞赛活动" value="竞赛活动"></el-option>
+                    <el-option label="表彰大会" value="表彰大会"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="活动地点" prop="location">
+                <el-input v-model="activityForm.location" placeholder="请输入活动地点"></el-input>
+            </el-form-item>
+            <el-form-item label="活动时间" prop="time">
+                <el-date-picker v-model="activityForm.time" type="datetime" placeholder="请选择活动时间" value-format="yyyy-MM-dd HH:mm" style="width:100%;"></el-date-picker>
+            </el-form-item>
+            <el-form-item label="参与人数上限" prop="maxParticipants">
+                <el-input-number v-model="activityForm.maxParticipants" :min="1" :max="500" style="width:100%;"></el-input-number>
+            </el-form-item>
+            <el-form-item label="活动描述" prop="description">
+                <el-input type="textarea" :rows="3" v-model="activityForm.description" placeholder="请输入活动描述"></el-input>
+            </el-form-item>
+        </el-form>
+        <span slot="footer">
+            <el-button size="small" @click="addActivityVisible = false">取消</el-button>
+            <el-button type="primary" size="small" @click="submitActivity">确认新增</el-button>
+        </span>
+    </el-dialog>
+</div>
+
+<script src="libs/vue.min.js"></script>
+<script src="libs/element-ui.js"></script>
+<script>
+new Vue({
+    el: '#activities',
+    data: {
+        listType: 'card',
+        addActivityVisible: false,
+        curActId: 10,
+        activityForm: { title: '', type: '', location: '', time: '', maxParticipants: 100, description: '' },
+        activityRules: {
+            title: [{ required: true, message: '请输入活动名称', trigger: 'blur' }],
+            type: [{ required: true, message: '请选择活动类型', trigger: 'change' }],
+            location: [{ required: true, message: '请输入活动地点', trigger: 'blur' }],
+            time: [{ required: true, message: '请选择活动时间', trigger: 'change' }]
+        },
+        activityList: [
+            { id: 1, title: '"不忘初心、牢记使命"主题教育', type: '主题教育', icon: 'el-icon-s-flag', location: '集团大会议室', time: '2026-06-20 14:00', participants: 120, status: '即将开始', statusType: 'warning' },
+            { id: 2, title: '参观革命纪念馆', type: '参观学习', icon: 'el-icon-s-home', location: 'XX革命纪念馆', time: '2026-06-05 09:00', participants: 80, status: '已完成', statusType: 'success' },
+            { id: 3, title: '社区志愿服务日', type: '志愿服务', icon: 'el-icon-s-cooperation', location: '阳光社区广场', time: '2026-06-15 08:30', participants: 50, status: '即将开始', statusType: 'warning' },
+            { id: 4, title: '党风廉政教育专题会', type: '专题学习', icon: 'el-icon-s-check', location: '集团报告厅', time: '2026-06-10 15:00', participants: 150, status: '已完成', statusType: 'success' },
+            { id: 5, title: '党建知识竞赛', type: '竞赛活动', icon: 'el-icon-s-data', location: '集团多功能厅', time: '2026-06-25 14:00', participants: 200, status: '报名中', statusType: 'primary' },
+            { id: 6, title: '"七一"表彰大会', type: '表彰大会', icon: 'el-icon-s-custom', location: '集团大礼堂', time: '2026-07-01 09:00', participants: 300, status: '筹备中', statusType: 'info' }
+        ]
+    },
+    methods: {
+        openAddActivity() {
+            this.activityForm = { title: '', type: '', location: '', time: '', maxParticipants: 100, description: '' };
+            this.addActivityVisible = true;
+        },
+        submitActivity() {
+            var that = this;
+            this.$refs.activityFormRef.validate(function(valid) {
+                if (!valid) return false;
+                var icons = ['el-icon-s-flag', 'el-icon-s-home', 'el-icon-s-cooperation', 'el-icon-s-check', 'el-icon-s-data', 'el-icon-s-custom'];
+                var newActivity = {
+                    id: ++that.curActId,
+                    title: that.activityForm.title,
+                    type: that.activityForm.type,
+                    icon: icons[Math.floor(Math.random() * icons.length)],
+                    location: that.activityForm.location,
+                    time: that.activityForm.time,
+                    participants: 0,
+                    maxParticipants: that.activityForm.maxParticipants,
+                    status: '报名中',
+                    statusType: 'primary'
+                };
+                that.activityList.unshift(newActivity);
+                that.addActivityVisible = false;
+                that.$message.success('新增活动成功！');
+            });
+        }
+    }
+});
+</script>
+</body>
+</html>

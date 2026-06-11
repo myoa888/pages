@@ -1,0 +1,136 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>报表统计</title>
+    <link rel="stylesheet" href="libs/element-ui.css">
+    <script src="libs/echarts.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #f0f2f5; font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+        .page { padding: 20px; }
+        .toolbar { background: #fff; padding: 16px 20px; border-radius: 8px; margin-bottom: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); display: flex; align-items: center; gap: 12px; }
+        .chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+        .card { background: #fff; border-radius: 8px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+        .card .card-title { font-size: 15px; font-weight: 600; color: #303133; padding-bottom: 12px; border-bottom: 1px solid #ebeef5; margin-bottom: 12px; }
+        .chart-box { width: 100%; height: 320px; }
+        .full-chart { width: 100%; height: 340px; }
+    </style>
+</head>
+<body>
+<div id="reports">
+<div class="page">
+    <div class="toolbar">
+        <el-select v-model="reportType" size="small" style="width:150px;">
+            <el-option label="党员统计报表" value="member"></el-option>
+            <el-option label="活动统计报表" value="activity"></el-option>
+            <el-option label="党费统计报表" value="dues"></el-option>
+            <el-option label="学习统计报表" value="study"></el-option>
+        </el-select>
+        <el-date-picker v-model="dateRange" type="year" placeholder="选择年份" size="small" value-format="yyyy" style="width:130px;"></el-date-picker>
+        <el-button type="primary" size="small" icon="el-icon-search">查询</el-button>
+        <el-button size="small" icon="el-icon-download">导出报表</el-button>
+        <el-button size="small" icon="el-icon-printer">打印</el-button>
+    </div>
+
+    <div class="chart-row">
+        <div class="card">
+            <div class="card-title">各支部党员分布</div>
+            <div class="chart-box" id="chart1"></div>
+        </div>
+        <div class="card">
+            <div class="card-title">党员年龄结构</div>
+            <div class="chart-box" id="chart2"></div>
+        </div>
+    </div>
+
+    <div class="chart-row">
+        <div class="card">
+            <div class="card-title">各支部活动开展情况</div>
+            <div class="chart-box" id="chart3"></div>
+        </div>
+        <div class="card">
+            <div class="card-title">党费收缴趋势</div>
+            <div class="chart-box" id="chart4"></div>
+        </div>
+    </div>
+</div>
+</div>
+
+<script src="libs/vue.min.js"></script>
+<script src="libs/element-ui.js"></script>
+<script>
+new Vue({
+    el: '#reports',
+    data: { reportType: 'member', dateRange: '2026' },
+    mounted() {
+        this.initCharts();
+        window.addEventListener('resize', () => {
+            ['chart1','chart2','chart3','chart4'].forEach(id => {
+                echarts.getInstanceByDom(document.getElementById(id))?.resize();
+            });
+        });
+    },
+    methods: {
+        initCharts() {
+            // 各支部党员分布
+            var c1 = echarts.init(document.getElementById('chart1'));
+            c1.setOption({
+                tooltip: { trigger: 'axis' },
+                grid: { left: '3%', right: '4%', bottom: '5%', top: '5%', containLabel: true },
+                xAxis: { type: 'category', data: ['第一支部','第二支部','第三支部','第四支部','第五支部','第六支部'] },
+                yAxis: { type: 'value' },
+                series: [{ type: 'bar', data: [85,78,92,76,68,82], itemStyle: { color: '#e53935', borderRadius: [4,4,0,0] }, barWidth: 30 }]
+            });
+
+            // 党员年龄结构
+            var c2 = echarts.init(document.getElementById('chart2'));
+            c2.setOption({
+                tooltip: { trigger: 'item', formatter: '{b}: {c}人 ({d}%)' },
+                series: [{
+                    type: 'pie', radius: ['45%', '70%'], center: ['50%', '50%'],
+                    label: { formatter: '{b}\n{d}%', fontSize: 12 },
+                    data: [
+                        { value: 186, name: '35岁以下', itemStyle: { color: '#e53935' } },
+                        { value: 420, name: '35-45岁', itemStyle: { color: '#1e88e5' } },
+                        { value: 380, name: '46-55岁', itemStyle: { color: '#43a047' } },
+                        { value: 300, name: '55岁以上', itemStyle: { color: '#fb8c00' } }
+                    ]
+                }]
+            });
+
+            // 各支部活动
+            var c3 = echarts.init(document.getElementById('chart3'));
+            c3.setOption({
+                tooltip: { trigger: 'axis' },
+                legend: { data: ['主题党日','志愿服务','学习培训'], bottom: 0, textStyle: { fontSize: 12 } },
+                grid: { left: '3%', right: '4%', bottom: '14%', top: '8%', containLabel: true },
+                xAxis: { type: 'category', data: ['第一支部','第二支部','第三支部','第四支部','第五支部','第六支部'] },
+                yAxis: { type: 'value' },
+                series: [
+                    { name: '主题党日', type: 'bar', data: [12,10,14,8,9,7], stack: 'total', itemStyle: { color: '#e53935' } },
+                    { name: '志愿服务', type: 'bar', data: [8,6,10,5,7,4], stack: 'total', itemStyle: { color: '#1e88e5' } },
+                    { name: '学习培训', type: 'bar', data: [10,12,8,9,6,7], stack: 'total', itemStyle: { color: '#43a047' } }
+                ]
+            });
+
+            // 党费收缴趋势
+            var c4 = echarts.init(document.getElementById('chart4'));
+            c4.setOption({
+                tooltip: { trigger: 'axis' },
+                legend: { data: ['应收','实收'], bottom: 0, textStyle: { fontSize: 12 } },
+                grid: { left: '3%', right: '4%', bottom: '14%', top: '8%', containLabel: true },
+                xAxis: { type: 'category', data: ['1月','2月','3月','4月','5月','6月'] },
+                yAxis: { type: 'value', axisLabel: { formatter: '{value}' } },
+                series: [
+                    { name: '应收', type: 'line', data: [58620,58100,59200,58800,59500,58620], smooth: true, itemStyle: { color: '#e53935' } },
+                    { name: '实收', type: 'line', data: [57850,57300,58500,58000,58800,57750], smooth: true, itemStyle: { color: '#43a047' } }
+                ]
+            });
+        }
+    }
+});
+</script>
+</body>
+</html>

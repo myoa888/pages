@@ -1,0 +1,161 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>考核评估</title>
+    <link rel="stylesheet" href="libs/element-ui.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #f0f2f5; font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+        .page { padding: 20px; }
+        .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
+        .stat-box { background: #fff; border-radius: 8px; padding: 20px 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); text-align: center; }
+        .stat-box .num { font-size: 28px; font-weight: 700; color: #303133; }
+        .stat-box .txt { font-size: 13px; color: #909399; margin-top: 6px; }
+        .card { background: #fff; border-radius: 8px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); margin-bottom: 16px; }
+        .card .card-title { font-size: 15px; font-weight: 600; color: #303133; padding-bottom: 12px; border-bottom: 1px solid #ebeef5; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
+    </style>
+</head>
+<body>
+<div id="assessment">
+<div class="page">
+    <div class="stat-row">
+        <div class="stat-box"><div class="num" style="color:#e53935;">32</div><div class="txt">考核支部数</div></div>
+        <div class="stat-box"><div class="num" style="color:#1e88e5;">89.2</div><div class="txt">平均分</div></div>
+        <div class="stat-box"><div class="num" style="color:#43a047;">12</div><div class="txt">优秀支部</div></div>
+        <div class="stat-box"><div class="num" style="color:#fb8c00;">3</div><div class="txt">待改进支部</div></div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">
+            <span>2026年第二季度考核评估</span>
+            <div>
+                <el-select v-model="quarter" size="small" style="width:130px;">
+                    <el-option label="2026年Q2" value="2026Q2"></el-option>
+                    <el-option label="2026年Q1" value="2026Q1"></el-option>
+                    <el-option label="2025年Q4" value="2025Q4"></el-option>
+                </el-select>
+                <el-button type="primary" size="small" icon="el-icon-edit" style="margin-left:10px;" @click="openAddAssessment">发起考核</el-button>
+            </div>
+        </div>
+        <el-table :data="assessData" border stripe style="width:100%">
+            <el-table-column type="index" label="排名" width="60" align="center"></el-table-column>
+            <el-table-column prop="branch" label="支部名称" min-width="150"></el-table-column>
+            <el-table-column prop="organization" label="组织建设(30分)" width="110" align="center"></el-table-column>
+            <el-table-column prop="ideology" label="思想建设(25分)" width="110" align="center"></el-table-column>
+            <el-table-column prop="discipline" label="纪律建设(20分)" width="110" align="center"></el-table-column>
+            <el-table-column prop="activity" label="活动开展(15分)" width="110" align="center"></el-table-column>
+            <el-table-column prop="innovation" label="创新工作(10分)" width="110" align="center"></el-table-column>
+            <el-table-column prop="total" label="总分" width="80" align="center">
+                <template slot-scope="scope">
+                    <span style="font-weight:700;color:#c62828;">{{ scope.row.total }}</span>
+                </template>
+            </el-table-column>
+            <el-table-column label="等级" width="80" align="center">
+                <template slot-scope="scope">
+                    <el-tag :type="scope.row.level === '优秀' ? 'success' : scope.row.level === '良好' ? 'primary' : scope.row.level === '合格' ? 'warning' : 'danger'" size="small">{{ scope.row.level }}</el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column label="操作" width="100" align="center">
+                <template>
+                    <el-button type="text" size="small">详情</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+    </div>
+</div>
+
+    <!-- 发起考核弹窗 -->
+    <el-dialog title="发起考核" :visible.sync="addAssessVisible" width="620px" :close-on-click-modal="false">
+        <el-form :model="assessForm" :rules="assessRules" ref="assessFormRef" label-width="120px" size="small">
+            <el-form-item label="考核支部" prop="branch">
+                <el-select v-model="assessForm.branch" placeholder="请选择" style="width:100%;">
+                    <el-option label="第一党支部" value="第一党支部"></el-option>
+                    <el-option label="第二党支部" value="第二党支部"></el-option>
+                    <el-option label="第三党支部" value="第三党支部"></el-option>
+                    <el-option label="第四党支部" value="第四党支部"></el-option>
+                    <el-option label="第五党支部" value="第五党支部"></el-option>
+                    <el-option label="第六党支部" value="第六党支部"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="考核季度" prop="quarter">
+                <el-input v-model="assessForm.quarter" placeholder="如：2026年Q3"></el-input>
+            </el-form-item>
+            <el-form-item label="组织建设(30分)" prop="organization">
+                <el-input-number v-model="assessForm.organization" :min="0" :max="30" style="width:100%;"></el-input-number>
+            </el-form-item>
+            <el-form-item label="思想建设(25分)" prop="ideology">
+                <el-input-number v-model="assessForm.ideology" :min="0" :max="25" style="width:100%;"></el-input-number>
+            </el-form-item>
+            <el-form-item label="纪律建设(20分)" prop="discipline">
+                <el-input-number v-model="assessForm.discipline" :min="0" :max="20" style="width:100%;"></el-input-number>
+            </el-form-item>
+            <el-form-item label="活动开展(15分)" prop="activity">
+                <el-input-number v-model="assessForm.activity" :min="0" :max="15" style="width:100%;"></el-input-number>
+            </el-form-item>
+            <el-form-item label="创新工作(10分)" prop="innovation">
+                <el-input-number v-model="assessForm.innovation" :min="0" :max="10" style="width:100%;"></el-input-number>
+            </el-form-item>
+        </el-form>
+        <span slot="footer">
+            <el-button size="small" @click="addAssessVisible = false">取消</el-button>
+            <el-button type="primary" size="small" @click="submitAssessment">确认发起</el-button>
+        </span>
+    </el-dialog>
+</div>
+
+<script src="libs/vue.min.js"></script>
+<script src="libs/element-ui.js"></script>
+<script>
+new Vue({
+    el: '#assessment',
+    data: {
+        quarter: '2026Q2',
+        addAssessVisible: false,
+        assessForm: { branch: '', quarter: '', organization: 25, ideology: 20, discipline: 18, activity: 12, innovation: 8 },
+        assessRules: {
+            branch: [{ required: true, message: '请选择支部', trigger: 'change' }],
+            quarter: [{ required: true, message: '请输入考核季度', trigger: 'blur' }]
+        },
+        assessData: [
+            { branch: '第一党支部', organization: 28, ideology: 23, discipline: 19, activity: 14, innovation: 9, total: 93, level: '优秀' },
+            { branch: '第三党支部', organization: 27, ideology: 24, discipline: 18, activity: 13, innovation: 9, total: 91, level: '优秀' },
+            { branch: '第二党支部', organization: 26, ideology: 22, discipline: 19, activity: 14, innovation: 8, total: 89, level: '良好' },
+            { branch: '第五党支部', organization: 25, ideology: 21, discipline: 18, activity: 13, innovation: 8, total: 85, level: '良好' },
+            { branch: '第四党支部', organization: 24, ideology: 20, discipline: 17, activity: 12, innovation: 7, total: 80, level: '合格' },
+            { branch: '第六党支部', organization: 22, ideology: 19, discipline: 16, activity: 11, innovation: 6, total: 74, level: '合格' }
+        ]
+    },
+    methods: {
+        openAddAssessment() {
+            this.assessForm = { branch: '', quarter: '', organization: 25, ideology: 20, discipline: 18, activity: 12, innovation: 8 };
+            this.addAssessVisible = true;
+        },
+        submitAssessment() {
+            var that = this;
+            this.$refs.assessFormRef.validate(function(valid) {
+                if (!valid) return false;
+                var af = that.assessForm;
+                var total = af.organization + af.ideology + af.discipline + af.activity + af.innovation;
+                var level = total >= 90 ? '优秀' : total >= 80 ? '良好' : total >= 70 ? '合格' : '待改进';
+                var newAssess = {
+                    branch: af.branch,
+                    organization: af.organization,
+                    ideology: af.ideology,
+                    discipline: af.discipline,
+                    activity: af.activity,
+                    innovation: af.innovation,
+                    total: total,
+                    level: level
+                };
+                that.assessData.unshift(newAssess);
+                that.addAssessVisible = false;
+                that.$message.success('发起考核成功！');
+            });
+        }
+    }
+});
+</script>
+</body>
+</html>

@@ -31,7 +31,7 @@
 
 /* ==================== 软件详情头部 ==================== */
 .software-detail {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #3b82f6 0%, #0891b2 100%);
     padding: 40px 0;
     color: var(--white);
 }
@@ -251,7 +251,7 @@
 }
 
 .intro-content .highlight {
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(8, 145, 178, 0.1) 100%);
     padding: 16px;
     border-radius: var(--radius);
     border-left: 4px solid var(--primary-color);

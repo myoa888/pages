@@ -1,0 +1,189 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>三会一课</title>
+    <link rel="stylesheet" href="libs/element-ui.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #f0f2f5; font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+        .page { padding: 20px; }
+        .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
+        .stat-box { background: #fff; border-radius: 8px; padding: 20px 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); text-align: center; cursor: pointer; transition: box-shadow 0.3s; }
+        .stat-box:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+        .stat-box .num { font-size: 28px; font-weight: 700; }
+        .stat-box .txt { font-size: 13px; color: #909399; margin-top: 6px; }
+        .stat-box.active { border: 2px solid #c62828; }
+        .card { background: #fff; border-radius: 8px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); margin-bottom: 16px; }
+        .card .card-title { font-size: 15px; font-weight: 600; color: #303133; padding-bottom: 12px; border-bottom: 1px solid #ebeef5; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
+        .timeline-item { padding: 16px 0; border-bottom: 1px dashed #ebeef5; }
+        .timeline-item:last-child { border-bottom: none; }
+        .timeline-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .timeline-header .tl-title { font-size: 15px; font-weight: 600; color: #303133; }
+        .timeline-body { font-size: 13px; color: #606266; line-height: 1.8; }
+    </style>
+</head>
+<body>
+<div id="meetings">
+<div class="page">
+    <div class="stat-row">
+        <div class="stat-box" :class="{ active: currentTab === 'meeting' }" @click="currentTab = 'meeting'">
+            <div class="num" style="color:#e53935;">32</div><div class="txt">支部党员大会</div>
+        </div>
+        <div class="stat-box" :class="{ active: currentTab === 'committee' }" @click="currentTab = 'committee'">
+            <div class="num" style="color:#1e88e5;">48</div><div class="txt">支部委员会</div>
+        </div>
+        <div class="stat-box" :class="{ active: currentTab === 'group' }" @click="currentTab = 'group'">
+            <div class="num" style="color:#43a047;">86</div><div class="txt">党小组会</div>
+        </div>
+        <div class="stat-box" :class="{ active: currentTab === 'class' }" @click="currentTab = 'class'">
+            <div class="num" style="color:#fb8c00;">24</div><div class="txt">党课</div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">
+            <span>{{ currentTitle }}</span>
+            <el-button type="primary" size="small" icon="el-icon-plus" @click="openAddMeeting">新增记录</el-button>
+        </div>
+
+        <div v-for="item in currentList" :key="item.id" class="timeline-item">
+            <div class="timeline-header">
+                <span class="tl-title">{{ item.title }}</span>
+                <el-tag :type="item.tagType" size="small">{{ item.tag }}</el-tag>
+            </div>
+            <div class="timeline-body">
+                <div><i class="el-icon-location-outline"></i> {{ item.location }} &nbsp;&nbsp; <i class="el-icon-time"></i> {{ item.time }}</div>
+                <div><i class="el-icon-user"></i> 主持人：{{ item.host }} &nbsp;&nbsp; 应到{{ item.expected }}人，实到{{ item.actual }}人</div>
+                <div style="margin-top:4px;color:#909399;">主要内容：{{ item.summary }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- 新增会议记录弹窗 -->
+    <el-dialog title="新增会议记录" :visible.sync="addMeetingVisible" width="580px" :close-on-click-modal="false">
+        <el-form :model="meetingForm" :rules="meetingRules" ref="meetingFormRef" label-width="100px" size="small">
+            <el-form-item label="会议类型" prop="mtype">
+                <el-select v-model="meetingForm.mtype" placeholder="请选择会议类型" style="width:100%;">
+                    <el-option label="支部党员大会" value="meeting"></el-option>
+                    <el-option label="支部委员会" value="committee"></el-option>
+                    <el-option label="党小组会" value="group"></el-option>
+                    <el-option label="党课" value="class"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="会议标题" prop="title">
+                <el-input v-model="meetingForm.title" placeholder="请输入会议标题"></el-input>
+            </el-form-item>
+            <el-form-item label="会议地点" prop="location">
+                <el-input v-model="meetingForm.location" placeholder="请输入会议地点"></el-input>
+            </el-form-item>
+            <el-form-item label="会议时间" prop="time">
+                <el-date-picker v-model="meetingForm.time" type="datetime" placeholder="请选择会议时间" value-format="yyyy-MM-dd HH:mm" style="width:100%;"></el-date-picker>
+            </el-form-item>
+            <el-form-item label="主持人" prop="host">
+                <el-input v-model="meetingForm.host" placeholder="请输入主持人"></el-input>
+            </el-form-item>
+            <el-row :gutter="16">
+                <el-col :span="12">
+                    <el-form-item label="应到人数" prop="expected">
+                        <el-input-number v-model="meetingForm.expected" :min="1" :max="500" style="width:100%;"></el-input-number>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="实到人数" prop="actual">
+                        <el-input-number v-model="meetingForm.actual" :min="0" :max="500" style="width:100%;"></el-input-number>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-form-item label="主要内容" prop="summary">
+                <el-input type="textarea" :rows="3" v-model="meetingForm.summary" placeholder="请输入会议主要内容"></el-input>
+            </el-form-item>
+        </el-form>
+        <span slot="footer">
+            <el-button size="small" @click="addMeetingVisible = false">取消</el-button>
+            <el-button type="primary" size="small" @click="submitMeeting">确认新增</el-button>
+        </span>
+    </el-dialog>
+</div>
+
+<script src="libs/vue.min.js"></script>
+<script src="libs/element-ui.js"></script>
+<script>
+new Vue({
+    el: '#meetings',
+    data: {
+        currentTab: 'meeting',
+        addMeetingVisible: false,
+        curMtId: 10,
+        meetingForm: { mtype: '', title: '', location: '', time: '', host: '', expected: 50, actual: 0, summary: '' },
+        meetingRules: {
+            mtype: [{ required: true, message: '请选择会议类型', trigger: 'change' }],
+            title: [{ required: true, message: '请输入会议标题', trigger: 'blur' }],
+            location: [{ required: true, message: '请输入会议地点', trigger: 'blur' }],
+            time: [{ required: true, message: '请选择会议时间', trigger: 'change' }],
+            host: [{ required: true, message: '请输入主持人', trigger: 'blur' }]
+        },
+        meetingList: [
+            { id: 1, title: '第二季度全体党员大会', location: '集团大会议室', time: '2026-06-28 14:00', host: '张书记', expected: 420, actual: 395, summary: '学习上级党委最新文件精神，总结第二季度党建工作，部署第三季度重点任务', tag: '已完成', tagType: 'success' },
+            { id: 2, title: '第一党总支党员大会', location: '第一会议室', time: '2026-06-15 10:00', host: '李书记', expected: 420, actual: 408, summary: '讨论党员发展事宜，研究"七一"表彰推荐人选', tag: '已完成', tagType: 'success' },
+            { id: 3, title: '第三季度全体党员大会', location: '集团大礼堂', time: '2026-09-20 14:00', host: '张书记', expected: 420, actual: 0, summary: '总结上半年党建工作，部署下半年重点工作', tag: '计划中', tagType: 'info' }
+        ],
+        committeeList: [
+            { id: 1, title: '6月份支部委员会会议', location: '党委会议室', time: '2026-06-05 09:00', host: '张书记', expected: 9, actual: 9, summary: '研究6月主题党日活动方案，讨论发展对象考察情况', tag: '已完成', tagType: 'success' },
+            { id: 2, title: '5月份支部委员会会议', location: '党委会议室', time: '2026-05-08 09:00', host: '张书记', expected: 9, actual: 8, summary: '学习换届选举相关文件，研究党费使用方案', tag: '已完成', tagType: 'success' }
+        ],
+        groupList: [
+            { id: 1, title: '第一党小组学习讨论会', location: '党建活动室', time: '2026-06-08 15:00', host: '王组长', expected: 25, actual: 23, summary: '学习《中国共产党纪律处分条例》，开展批评与自我批评', tag: '已完成', tagType: 'success' },
+            { id: 2, title: '第二党小组专题学习', location: '第三会议室', time: '2026-06-12 10:00', host: '赵组长', expected: 22, actual: 21, summary: '学习习近平总书记重要讲话，交流学习心得', tag: '已完成', tagType: 'success' }
+        ],
+        classList: [
+            { id: 1, title: '"学党史、悟思想"专题党课', location: '集团报告厅', time: '2026-06-18 14:30', host: '张书记', expected: 300, actual: 286, summary: '回顾党的百年奋斗历程，传承红色基因', tag: '已完成', tagType: 'success' },
+            { id: 2, title: '党风廉政建设专题党课', location: '集团报告厅', time: '2026-05-25 14:30', host: '纪检李书记', expected: 300, actual: 292, summary: '深入解读中央八项规定精神，强化纪律意识', tag: '已完成', tagType: 'success' }
+        ]
+    },
+    computed: {
+        currentTitle() {
+            var map = { meeting: '支部党员大会记录', committee: '支部委员会记录', group: '党小组会记录', class: '党课记录' };
+            return map[this.currentTab] || '';
+        },
+        currentList() {
+            return this[this.currentTab + 'List'] || [];
+        }
+    },
+    methods: {
+        openAddMeeting() {
+            this.meetingForm = { mtype: '', title: '', location: '', time: '', host: '', expected: 50, actual: 0, summary: '' };
+            this.addMeetingVisible = true;
+        },
+        submitMeeting() {
+            var that = this;
+            this.$refs.meetingFormRef.validate(function(valid) {
+                if (!valid) return false;
+                var newItem = {
+                    id: ++that.curMtId,
+                    title: that.meetingForm.title,
+                    location: that.meetingForm.location,
+                    time: that.meetingForm.time,
+                    host: that.meetingForm.host,
+                    expected: that.meetingForm.expected,
+                    actual: that.meetingForm.actual,
+                    summary: that.meetingForm.summary,
+                    tag: '已完成',
+                    tagType: 'success'
+                };
+                var listName = that.meetingForm.mtype + 'List';
+                if (that[listName]) {
+                    that[listName].unshift(newItem);
+                }
+                that.currentTab = that.meetingForm.mtype;
+                that.addMeetingVisible = false;
+                that.$message.success('新增记录成功！');
+            });
+        }
+    }
+});
+</script>
+</body>
+</html>

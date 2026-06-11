@@ -86,6 +86,13 @@ const softwareData = {
         { name: 'WPS Office 2026', version: '2026-05-16' },
         { name: 'VS Code 1.90', version: '2026-05-15' }
     ],
+    // 党建文章
+    djArticles: [
+        { id: 1, tag: '理论学习', title: '深入学习贯彻习近平新时代中国特色社会主义思想', date: '2026-06-01', url: 'software/dangjian/articles/article1.html' },
+        { id: 2, tag: '政策解读', title: '党的二十大精神解读与实践指引', date: '2026-05-25', url: 'software/dangjian/articles/article2.html' },
+        { id: 3, tag: '党史学习', title: '从百年党史中汲取奋进力量', date: '2026-05-18', url: 'software/dangjian/articles/article3.html' },
+        { id: 4, tag: '党风廉政', title: '新时代党风廉政建设与反腐败斗争', date: '2026-05-10', url: 'software/dangjian/articles/article4.html' }
+    ],
     // 热门软件
     hotSoftware: [
         {
@@ -309,6 +316,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderRanking();
     renderLatest();
     renderHotSoftware();
+    renderDjArticles();
     initCarousel();
     initRankingTabs();
     initSearch();

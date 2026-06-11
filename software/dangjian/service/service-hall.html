@@ -1,0 +1,121 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>服务大厅</title>
+    <link rel="stylesheet" href="libs/element-ui.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #f0f2f5; font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+        .page { padding: 20px; }
+        .hall-banner {
+            background: linear-gradient(135deg, #e53935 0%, #c62828 100%);
+            border-radius: 12px;
+            padding: 32px 40px;
+            color: #fff;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .hall-banner .banner-title { font-size: 24px; font-weight: bold; margin-bottom: 8px; }
+        .hall-banner .banner-sub { font-size: 14px; opacity: 0.85; }
+        .service-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
+        .svc-item {
+            background: #fff; border-radius: 8px; padding: 28px 16px;
+            text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            cursor: pointer; transition: box-shadow 0.3s, transform 0.3s;
+        }
+        .svc-item:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.12); transform: translateY(-2px); }
+        .svc-item .svc-icon {
+            width: 60px; height: 60px; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 12px; font-size: 28px; color: #fff;
+        }
+        .svc-item .svc-name { font-size: 15px; font-weight: 600; color: #303133; margin-bottom: 4px; }
+        .svc-item .svc-desc { font-size: 12px; color: #909399; }
+        .card { background: #fff; border-radius: 8px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); margin-bottom: 16px; }
+        .card .card-title { font-size: 15px; font-weight: 600; color: #303133; padding-bottom: 12px; border-bottom: 1px solid #ebeef5; margin-bottom: 16px; }
+        .guide-item { padding: 12px 0; border-bottom: 1px dashed #ebeef5; display: flex; align-items: center; cursor: pointer; }
+        .guide-item:hover { color: #c62828; }
+        .guide-item .guide-step {
+            width: 26px; height: 26px; background: #c62828; color: #fff;
+            border-radius: 50%; text-align: center; line-height: 26px;
+            font-size: 13px; font-weight: bold; margin-right: 12px; flex-shrink: 0;
+        }
+        .guide-item .guide-text { font-size: 14px; flex: 1; }
+    </style>
+</head>
+<body>
+<div id="service-hall">
+<div class="page">
+    <div class="hall-banner">
+        <div>
+            <div class="banner-title">党群服务大厅</div>
+            <div class="banner-sub">一站式党群服务 · 便捷高效 · 用心服务每一位党员群众</div>
+        </div>
+        <el-button type="default" size="small" style="background:rgba(255,255,255,0.2);border-color:rgba(255,255,255,0.4);color:#fff;">在线咨询</el-button>
+    </div>
+
+    <div class="service-grid">
+        <div class="svc-item">
+            <div class="svc-icon" style="background:linear-gradient(135deg,#e53935,#c62828);"><i class="el-icon-s-check"></i></div>
+            <div class="svc-name">组织关系转接</div>
+            <div class="svc-desc">在线办理组织关系转入转出</div>
+        </div>
+        <div class="svc-item">
+            <div class="svc-icon" style="background:linear-gradient(135deg,#1e88e5,#1565c0);"><i class="el-icon-s-order"></i></div>
+            <div class="svc-name">发展党员申请</div>
+            <div class="svc-desc">入党申请与发展流程办理</div>
+        </div>
+        <div class="svc-item">
+            <div class="svc-icon" style="background:linear-gradient(135deg,#43a047,#2e7d32);"><i class="el-icon-s-finance"></i></div>
+            <div class="svc-name">党费在线缴纳</div>
+            <div class="svc-desc">便捷安全的党费缴纳服务</div>
+        </div>
+        <div class="svc-item">
+            <div class="svc-icon" style="background:linear-gradient(135deg,#fb8c00,#ef6c00);"><i class="el-icon-s-cooperation"></i></div>
+            <div class="svc-name">活动报名</div>
+            <div class="svc-desc">党建活动在线报名签到</div>
+        </div>
+        <div class="svc-item">
+            <div class="svc-icon" style="background:linear-gradient(135deg,#2563eb,#1e40af);"><i class="el-icon-s-custom"></i></div>
+            <div class="svc-name">困难党员帮扶</div>
+            <div class="svc-desc">困难党员申请与帮扶对接</div>
+        </div>
+        <div class="svc-item">
+            <div class="svc-icon" style="background:linear-gradient(135deg,#00897b,#00695c);"><i class="el-icon-s-claim"></i></div>
+            <div class="svc-name">证明材料开具</div>
+            <div class="svc-desc">党员证明材料在线申请</div>
+        </div>
+        <div class="svc-item">
+            <div class="svc-icon" style="background:linear-gradient(135deg,#0891b2,#0e7490);"><i class="el-icon-s-platform"></i></div>
+            <div class="svc-name">会议室预约</div>
+            <div class="svc-desc">党组织会议室在线预约</div>
+        </div>
+        <div class="svc-item">
+            <div class="svc-icon" style="background:linear-gradient(135deg,#78909c,#455a64);"><i class="el-icon-s-tools"></i></div>
+            <div class="svc-name">意见建议</div>
+            <div class="svc-desc">对党建工作的意见建议</div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">办事指南</div>
+        <div class="guide-item"><span class="guide-step">1</span><span class="guide-text">组织关系转接办理流程及所需材料说明</span><i class="el-icon-arrow-right" style="color:#c0c4cc;"></i></div>
+        <div class="guide-item"><span class="guide-step">2</span><span class="guide-text">发展党员各阶段流程详解及表格下载</span><i class="el-icon-arrow-right" style="color:#c0c4cc;"></i></div>
+        <div class="guide-item"><span class="guide-step">3</span><span class="guide-text">党费缴纳标准及计算方式说明</span><i class="el-icon-arrow-right" style="color:#c0c4cc;"></i></div>
+        <div class="guide-item"><span class="guide-step">4</span><span class="guide-text">困难党员帮扶申请条件与审批流程</span><i class="el-icon-arrow-right" style="color:#c0c4cc;"></i></div>
+        <div class="guide-item"><span class="guide-step">5</span><span class="guide-text">党员证明材料开具申请指南</span><i class="el-icon-arrow-right" style="color:#c0c4cc;"></i></div>
+    </div>
+</div>
+</div>
+
+<script src="libs/vue.min.js"></script>
+<script src="libs/element-ui.js"></script>
+<script>
+new Vue({ el: '#service-hall' });
+</script>
+</body>
+</html>

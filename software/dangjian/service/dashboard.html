@@ -1,0 +1,241 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>首页概览</title>
+    <link rel="stylesheet" href="libs/element-ui.css">
+    <script src="libs/echarts.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #f0f2f5; font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+        .page { padding: 20px; }
+        .stat-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
+        .stat-card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            transition: box-shadow 0.3s;
+            cursor: pointer;
+        }
+        .stat-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+        .stat-icon {
+            width: 56px; height: 56px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            color: #fff;
+            margin-right: 16px;
+            flex-shrink: 0;
+        }
+        .stat-icon.red { background: linear-gradient(135deg, #e53935, #c62828); }
+        .stat-icon.blue { background: linear-gradient(135deg, #1e88e5, #1565c0); }
+        .stat-icon.green { background: linear-gradient(135deg, #43a047, #2e7d32); }
+        .stat-icon.orange { background: linear-gradient(135deg, #fb8c00, #ef6c00); }
+        .stat-info .stat-value { font-size: 28px; font-weight: 700; color: #303133; line-height: 1; }
+        .stat-info .stat-label { font-size: 13px; color: #909399; margin-top: 6px; }
+        .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+        .chart-card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+        }
+        .chart-card .card-title {
+            font-size: 15px; font-weight: 600; color: #303133;
+            padding-bottom: 12px; border-bottom: 1px solid #ebeef5;
+            margin-bottom: 12px;
+        }
+        .chart-box { width: 100%; height: 300px; }
+        .bottom-row { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+        .news-card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+        }
+        .news-card .card-title { font-size: 15px; font-weight: 600; color: #303133; margin-bottom: 14px; }
+        .news-item {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 10px 0; border-bottom: 1px dashed #ebeef5;
+            cursor: pointer;
+        }
+        .news-item:hover .news-title { color: #c62828; }
+        .news-item .news-title { font-size: 14px; color: #303133; flex: 1; }
+        .news-item .news-tag { margin: 0 10px; flex-shrink: 0; }
+        .news-item .news-time { font-size: 12px; color: #999; flex-shrink: 0; }
+        .calendar-card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+        }
+        .event-item {
+            display: flex; align-items: center;
+            padding: 8px 0;
+            font-size: 13px; color: #606266;
+        }
+        .event-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+        .event-dot.red { background: #e53935; }
+        .event-dot.blue { background: #1e88e5; }
+        .event-dot.green { background: #43a047; }
+        .event-dot.orange { background: #fb8c00; }
+    </style>
+</head>
+<body>
+<div id="dashboard">
+<div class="page">
+    <!-- 统计卡片 -->
+    <div class="stat-cards">
+        <div class="stat-card">
+            <div class="stat-icon red"><i class="el-icon-user-solid"></i></div>
+            <div class="stat-info">
+                <div class="stat-value">1,286</div>
+                <div class="stat-label">党员总数</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon blue"><i class="el-icon-s-flag"></i></div>
+            <div class="stat-info">
+                <div class="stat-value">32</div>
+                <div class="stat-label">党支部数量</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon green"><i class="el-icon-s-data"></i></div>
+            <div class="stat-info">
+                <div class="stat-value">186</div>
+                <div class="stat-label">本月活动次数</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon orange"><i class="el-icon-s-check"></i></div>
+            <div class="stat-info">
+                <div class="stat-value">98.5<span style="font-size:16px;">%</span></div>
+                <div class="stat-label">党费收缴率</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 图表区域 -->
+    <div class="charts-row">
+        <div class="chart-card">
+            <div class="card-title">党员发展趋势</div>
+            <div class="chart-box" id="trendChart"></div>
+        </div>
+        <div class="chart-card">
+            <div class="card-title">党员学历分布</div>
+            <div class="chart-box" id="eduChart"></div>
+        </div>
+    </div>
+
+    <!-- 底部区域 -->
+    <div class="bottom-row">
+        <div class="news-card">
+            <div class="card-title" style="display:flex;justify-content:space-between;">
+                <span>最新动态</span>
+                <el-button type="text" size="small">更多 &gt;</el-button>
+            </div>
+            <div>
+                <div class="news-item" v-for="item in newsList" :key="item.id">
+                    <span class="news-title">{{ item.title }}</span>
+                    <el-tag :type="item.type" size="mini" class="news-tag">{{ item.tag }}</el-tag>
+                    <span class="news-time">{{ item.time }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="calendar-card">
+            <div class="card-title" style="display:flex;justify-content:space-between;">
+                <span>近期活动</span>
+                <el-button type="text" size="small">全部 &gt;</el-button>
+            </div>
+            <div v-for="item in events" :key="item.id" class="event-item">
+                <span class="event-dot" :class="item.color"></span>
+                <span style="flex:1;">{{ item.title }}</span>
+                <span style="font-size:12px;color:#999;">{{ item.date }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<script src="libs/vue.min.js"></script>
+<script src="libs/element-ui.js"></script>
+<script>
+new Vue({
+    el: '#dashboard',
+    data: {
+        newsList: [
+            { id: 1, title: '关于召开2026年度党建工作会议的通知', type: 'danger', tag: '通知', time: '2026-06-10' },
+            { id: 2, title: '第三党支部顺利完成换届选举工作', type: 'success', tag: '动态', time: '2026-06-09' },
+            { id: 3, title: '"不忘初心、牢记使命"主题教育成果总结', type: 'primary', tag: '学习', time: '2026-06-08' },
+            { id: 4, title: '关于开展"七一"表彰评选工作的通知', type: 'warning', tag: '通知', time: '2026-06-07' },
+            { id: 5, title: '2026年第二季度党员发展对象公示', type: 'info', tag: '公示', time: '2026-06-06' }
+        ],
+        events: [
+            { id: 1, title: '党委中心组理论学习', color: 'red', date: '06-12' },
+            { id: 2, title: '基层党支部书记培训', color: 'blue', date: '06-15' },
+            { id: 3, title: '"七一"主题党日活动', color: 'red', date: '07-01' },
+            { id: 4, title: '第二季度党员大会', color: 'green', date: '07-05' },
+            { id: 5, title: '党建知识竞赛决赛', color: 'orange', date: '07-10' }
+        ]
+    },
+    mounted() {
+        this.initTrendChart();
+        this.initEduChart();
+        window.addEventListener('resize', () => {
+            echarts.getInstanceByDom(document.getElementById('trendChart'))?.resize();
+            echarts.getInstanceByDom(document.getElementById('eduChart'))?.resize();
+        });
+    },
+    methods: {
+        initTrendChart() {
+            var chart = echarts.init(document.getElementById('trendChart'));
+            chart.setOption({
+                tooltip: { trigger: 'axis' },
+                legend: { data: ['新增党员', '转正党员', '入党积极分子'], bottom: 0, textStyle: { fontSize: 12 } },
+                grid: { left: '3%', right: '4%', bottom: '12%', top: '8%', containLabel: true },
+                xAxis: { type: 'category', data: ['1月', '2月', '3月', '4月', '5月', '6月'], axisLabel: { fontSize: 11 } },
+                yAxis: { type: 'value', axisLabel: { fontSize: 11 } },
+                series: [
+                    { name: '新增党员', type: 'bar', data: [12, 8, 15, 10, 18, 14], itemStyle: { color: '#e53935' }, barWidth: 18 },
+                    { name: '转正党员', type: 'bar', data: [5, 6, 8, 7, 10, 9], itemStyle: { color: '#1e88e5' }, barWidth: 18 },
+                    { name: '入党积极分子', type: 'line', data: [25, 28, 30, 32, 35, 38], itemStyle: { color: '#43a047' }, smooth: true }
+                ]
+            });
+        },
+        initEduChart() {
+            var chart = echarts.init(document.getElementById('eduChart'));
+            chart.setOption({
+                tooltip: { trigger: 'item', formatter: '{b}: {c}人 ({d}%)' },
+                legend: { orient: 'vertical', right: '5%', top: 'center', textStyle: { fontSize: 12 } },
+                series: [{
+                    type: 'pie',
+                    radius: ['45%', '72%'],
+                    center: ['38%', '50%'],
+                    label: { show: false },
+                    emphasis: { label: { show: true, fontSize: 14, fontWeight: 'bold' } },
+                    data: [
+                        { value: 186, name: '研究生及以上', itemStyle: { color: '#e53935' } },
+                        { value: 520, name: '大学本科', itemStyle: { color: '#1e88e5' } },
+                        { value: 380, name: '大学专科', itemStyle: { color: '#43a047' } },
+                        { value: 200, name: '高中及以下', itemStyle: { color: '#fb8c00' } }
+                    ]
+                }]
+            });
+        }
+    }
+});
+</script>
+</body>
+</html>
