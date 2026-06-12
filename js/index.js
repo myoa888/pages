@@ -20,6 +20,14 @@ const softwareData = {
         },
         {
             id: 3,
+            name: '设备租赁管理系统',
+            icon: '📦',
+            desc: '智能设备租赁平台，扫码出入库，数据驾驶舱',
+            url: 'software/device-rental/index.html',
+            category: '企业管理'
+        },
+        {
+            id: 4,
             name: 'Chrome浏览器',
             icon: '🌐',
             desc: '快速、安全的网页浏览器',
@@ -27,7 +35,7 @@ const softwareData = {
             category: '浏览器'
         },
         {
-            id: 3,
+            id: 5,
             name: 'WPS Office',
             icon: '📊',
             desc: '国产办公软件套装',
@@ -35,7 +43,7 @@ const softwareData = {
             category: '办公软件'
         },
         {
-            id: 4,
+            id: 6,
             name: 'VS Code',
             icon: '💻',
             desc: '轻量级代码编辑器',
@@ -43,7 +51,7 @@ const softwareData = {
             category: '开发工具'
         },
         {
-            id: 5,
+            id: 7,
             name: '网易云音乐',
             icon: '🎶',
             desc: '在线音乐播放软件',
@@ -88,6 +96,7 @@ const softwareData = {
     ],
     // 最新更新
     latest: [
+        { name: '设备租赁管理系统 v2.3', version: '2026-06-10' },
         { name: '智慧党建管理系统 v1.0', version: '2026-06-01' },
         { name: '曲谱收藏夹 v1.0', version: '2026-05-18' },
         { name: 'Chrome 125.0', version: '2026-05-18' },
@@ -119,6 +128,16 @@ const softwareData = {
         },
         {
             id: 3,
+            name: '设备租赁管理系统',
+            icon: '📦',
+            desc: '智能设备全生命周期管理平台，支持设备登记、租赁订单、客户档案、扫码归还、数据驾驶舱等功能，覆盖建筑设备、影视器材、医疗器械等6大行业。',
+            downloads: '3,850',
+            size: 'Web端',
+            category: '企业管理',
+            url: 'software/device-rental/index.html'
+        },
+        {
+            id: 4,
             name: 'Adobe Photoshop 2026',
             icon: '🎨',
             desc: '全球最专业的图片编辑软件，提供强大的图像处理、图形设计和照片修饰功能。',
@@ -127,7 +146,7 @@ const softwareData = {
             category: '图形图像'
         },
         {
-            id: 3,
+            id: 5,
             name: 'Microsoft Office 365',
             icon: '📁',
             desc: '微软官方办公软件套装，包含Word、Excel、PowerPoint等组件。',
@@ -136,7 +155,7 @@ const softwareData = {
             category: '办公软件'
         },
         {
-            id: 4,
+            id: 6,
             name: 'Visual Studio Code',
             icon: '💻',
             desc: '微软推出的轻量级、免费开源代码编辑器，支持多种编程语言。',
@@ -145,7 +164,7 @@ const softwareData = {
             category: '开发工具'
         },
         {
-            id: 5,
+            id: 7,
             name: '腾讯视频',
             icon: '🎬',
             desc: '在线视频播放软件，提供海量影视剧集、综艺节目、体育赛事等。',
@@ -154,7 +173,7 @@ const softwareData = {
             category: '视频播放'
         },
         {
-            id: 6,
+            id: 8,
             name: '搜狗输入法',
             icon: '⌨️',
             desc: '智能拼音输入法，提供流畅的文字输入体验和丰富的表情包。',
