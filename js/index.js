@@ -28,6 +28,22 @@ const softwareData = {
         },
         {
             id: 4,
+            name: '协同智能OA系统',
+            icon: '📋',
+            desc: '一站式协同办公平台，审批/考勤/任务/文档',
+            url: 'software/oa-system/index.html',
+            category: '办公协作'
+        },
+        {
+            id: 5,
+            name: '企智ERP管理系统',
+            icon: '🏪',
+            desc: '业财一体化ERP，进销存+财务+生产全链路',
+            url: 'software/erp-system/index.html',
+            category: '企业管理'
+        },
+        {
+            id: 6,
             name: 'Chrome浏览器',
             icon: '🌐',
             desc: '快速、安全的网页浏览器',
